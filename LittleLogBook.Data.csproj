@@ -10,7 +10,14 @@
         <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
         <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">$([System.DateTime]::Now.ToString("yy.M.d.HHmm0"))</Version>
         <BuildYear>$([System.DateTime]::Now.ToString("yyyy"))</BuildYear>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <AssemblyName>LittleLogBook.Data</AssemblyName>
+        <PackageIcon>application_large.png</PackageIcon>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <Authors>littlelogbook</Authors>
+        <Product>Little LogBook</Product>
+        <Copyright>Mbeleni Data Solutions 2020</Copyright>
+        <Description>This is a library which contains the data entities and building blocks for the Little LogBook Global database</Description>
         <AssemblyVersion>1.0.0.0</AssemblyVersion>
         <FileVersion>1.0.0.0</FileVersion>
         <Version>1.0.0.0</Version>
