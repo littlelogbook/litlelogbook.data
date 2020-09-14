@@ -23,7 +23,7 @@ namespace LittleLogBook.Data.Managers
         {
             if (IpAddress == null) return false;
 
-            if (IpAddress.Contains('.'))
+            if (IpAddress.Contains("."))
             {
                 if (IpAddress.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries).Length == 4) return true;
             }
@@ -52,7 +52,7 @@ namespace LittleLogBook.Data.Managers
             if (DottedIpAddress.StartsWith("10.")
                 || DottedIpAddress.StartsWith("192.")
                 || DottedIpAddress.StartsWith("172.")
-                || !DottedIpAddress.Contains('.')
+                || !DottedIpAddress.Contains(".")
                 ) return IsLocalhost(DottedIpAddress);
 
             return false;

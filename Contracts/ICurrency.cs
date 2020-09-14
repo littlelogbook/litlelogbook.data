@@ -12,7 +12,7 @@
         
         string Symbol { get; set; }
 
-        public string ExchangeRateText { get; }
+        string ExchangeRateText { get; }
 
         bool IsDirty { get; }
 
