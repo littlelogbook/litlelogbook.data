@@ -11,5 +11,7 @@ namespace LittleLogBook.Data.Contracts
         Guid UserPurseId { get; }
         
         Guid UserPurseTransactionId { get; }
+
+        DateTime DateCreated { get; }
     }
 }
