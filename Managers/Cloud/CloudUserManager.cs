@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 
-using LittleLogBook.Data.Common;
 using LittleLogBook.Data.Contracts;
 using LittleLogBook.Data.Entities.Cloud;
+using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
@@ -34,7 +34,7 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@EmailAddress", emailAddress, DbType.String);
                 command.AddParameter("@ViewedByUserId", Constants.SystemUserId, DbType.Guid);
 
-                using (var reader = await command.OpenReaderAsync())
+                using (var reader = command.OpenReader())
                 {
                     if (await reader.ReadAsync())
                     {
@@ -75,7 +75,7 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@EmailAddress", emailAddress, DbType.String);
                 command.AddParameter("@Password", password, DbType.String);
 
-                using (var reader = await command.OpenReaderAsync())
+                using (var reader = command.OpenReader())
                 {
                     if (await reader.ReadAsync())
                     {
@@ -94,7 +94,7 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@CloudUserId", userId, DbType.Guid);
                 command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
 
-                using (var reader = await command.OpenReaderAsync())
+                using (var reader = command.OpenReader())
                 {
                     if (await reader.ReadAsync())
                     {

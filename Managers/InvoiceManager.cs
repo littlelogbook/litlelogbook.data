@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using LittleLogBook.Data.Common;
 using LittleLogBook.Data.Contracts;
 using LittleLogBook.Data.Entities;
+using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
