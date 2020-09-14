@@ -1,0 +1,42 @@
+name: publish to nuget
+
+on:
+  push:
+    branches: master
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.101
+
+      - name: Install dependencies
+        run: dotnet restore
+        
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+        
+      - name: ToolSign
+        uses: DanaBear/code-sign-action@v4
+        with:
+          certificate: '${{ secrets.CERTIFICATE }}'
+          password: '${{ secrets.CERTIFICATE_PASSWORD }}'
+          certificatesha1: '${{ secrets.CERTIFICATE_SHA1HASH }}'
+          folder: '.'
+          recursive: true
+      
+      - name: Package
+        run: dotnet pack  --no-build -c Release LittleLogBook.Data.csproj -o .
+        
+      - name: Nuget Sign
+        run: nuget sign *.nupkg -CertificatePath ${{ secrets.TEMP_CERTIFICATE_PATH }} -CertificatePassword '${{ secrets.CERTIFICATE_PASSWORD }}' -Timestamper http://timestamp.comodoca.com
+
+      - name: NuGet push
+        run: dotnet nuget push *.nupkg -s https://api.nuget.org/v3/index.json -k ${{ secrets.NUGET_API_KEY }} --skip-duplicate -n 1
