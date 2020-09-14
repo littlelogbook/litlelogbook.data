@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <Platforms>x64;AnyCPU</Platforms>
+        <RuntimeIdentifiers>win7-x64</RuntimeIdentifiers>
+        <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    </PropertyGroup>
+    <PropertyGroup>
+        <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
+        <Version Condition=" '$(BUILD_BUILDNUMBER)' == '' ">$([System.DateTime]::Now.ToString("yy.M.d.HHmm0"))</Version>
+        <BuildYear>$([System.DateTime]::Now.ToString("yyyy"))</BuildYear>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+        <Version>1.0.0.0</Version>
+    </PropertyGroup>
+    <ItemGroup>
+      <PackageReference Include="LittleLogBook.Data.SqlConnectivity" Version="1.0.0" />
+      <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    </ItemGroup>
+</Project>
