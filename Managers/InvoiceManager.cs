@@ -8,15 +8,16 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class InvoiceManager : IInvoiceManager
+    public class InvoiceManager : ManagerBase, IInvoiceManager
     {
         private IPaymentManager _paymentManager;
         private IReceiptManager _receiptManager;
 
-        public InvoiceManager(IDataHandler dataHandler, IUser currentUser)
+        internal InvoiceManager(IDataHandler dataHandler, IUser currentUser)
+            : base(currentUser)
         {
-            _paymentManager = new PaymentManager(dataHandler, currentUser);
-            _receiptManager = new ReceiptManager(dataHandler, currentUser);
+            _paymentManager = new PaymentManager(dataHandler, CurrentUser);
+            _receiptManager = new ReceiptManager(dataHandler, CurrentUser);
         }
 
         public async Task<bool> RefundPaymentAsync(Guid paymentId)

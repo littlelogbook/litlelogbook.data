@@ -8,15 +8,14 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class BasketManager : IBasketManager
+    public class BasketManager : ManagerBase, IBasketManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly IUser _currentUser;
 
-        public BasketManager(IDataHandler dataHandler, IUser currentUser)
+        internal BasketManager(IDataHandler dataHandler, IUser currentUser)
+            : base(currentUser)
         {
             _dataHandler = dataHandler;
-            _currentUser = currentUser;
         }
 
         public async Task<bool> AddBasketItem(Guid BasketItemId, Guid UserId, Guid ItemReferenceId, EnumPaymentReferenceType ItemReferenceType,
@@ -34,7 +33,7 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@TaxRate", TaxRate, DbType.Decimal);
                 command.AddParameter("@TotalTax", TotalTax, DbType.Decimal);
                 command.AddParameter("@TotalAmount", TotalAmount, DbType.Decimal);
-                command.AddParameter("@CreatedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@CreatedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return (await command.ExecuteNonQueryAsync()) > 0;
             }

@@ -8,15 +8,14 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class IpLocationManager : IIpLocationManager
+    public class IpLocationManager : ManagerBase, IIpLocationManager
     {
-        private IDataHandler _dataHandler;
-        private IUser _currentUser;
+        private readonly IDataHandler _dataHandler;
 
-        public IpLocationManager(IDataHandler dataHandler, IUser currentUser)
+        internal IpLocationManager(IDataHandler dataHandler, IUser currentUser)
+            : base(currentUser)
         {
             _dataHandler = dataHandler;
-            _currentUser = currentUser;
         }
 
         public static bool IsIpv4Address(string IpAddress)

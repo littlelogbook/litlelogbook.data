@@ -17,7 +17,7 @@
         <Authors>littlelogbook</Authors>
         <Product>Little LogBook</Product>
         <Copyright>Mbeleni Data Solutions 2020</Copyright>
-        <Description>This is a library which contains the data entities and building blocks for the Little LogBook Global database</Description>
+        <Description>This library contains data entities and their managers for the Little LogBook Global database</Description>
         <Version>1.0.3.0</Version>
     </PropertyGroup>
     <ItemGroup>

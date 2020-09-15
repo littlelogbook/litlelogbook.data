@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using LittleLogBook.Data.Entities.Cloud;
-
 namespace LittleLogBook.Data.Contracts
 {
     public interface IUserManager
     {
+        IUser CurrentUser { get; }
+
         Task<IUser> GetUserAsync(Guid userId);
 
         Task<IUser> GetUserAsync(string emailAddress);
 
-        Task<IUser> GetUserAsync(string emailAddress, string password);
+        void Logout();
+
+        Task<IUser> LoginAsync(string emailAddress, string password);
 
         Task<IEnumerable<IUserAudit>> GetUserAuditsAsync(Guid cloudUserId, DateTime? dateFrom = null, DateTime? dateTo = null);
 

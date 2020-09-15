@@ -8,15 +8,14 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class VerificationCodeManager : IVerificationCodeManager
+    public class VerificationCodeManager : ManagerBase, IVerificationCodeManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly IUser _currentUser;
 
-        public VerificationCodeManager(IDataHandler dataHandler, IUser currentUser)
+        internal VerificationCodeManager(IDataHandler dataHandler, IUser currentUser)
+            : base(currentUser)
         {
             _dataHandler = dataHandler;
-            _currentUser = currentUser;
         }
 
         public async Task<IVerificationCode> GenerateVerificationCodeAsync(string mnemonicToken,
@@ -47,7 +46,7 @@ namespace LittleLogBook.Data.Managers
                     throw new ArgumentException("Invalid or unknown verficiation type was specified");
             }
 
-            var returnValue = new VerificationCode(_currentUser.CloudUserId, mnemonicToken,
+            var returnValue = new VerificationCode(CurrentUser.CloudUserId, mnemonicToken,
                 verificationCodeValue, verificationType, verificationCodeType, expirationDate);
 
             using (var command = _dataHandler.CreateCommand("CreateVerificationCode"))

@@ -9,15 +9,14 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class StorageProductManager : IStorageProductManager
+    public class StorageProductManager : ManagerBase, IStorageProductManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly IUser _currentUser;
 
-        public StorageProductManager(IDataHandler dataHandler, IUser currentUser)
+        internal StorageProductManager(IDataHandler dataHandler, IUser currentUser)
+            : base(currentUser)
         {
             _dataHandler = dataHandler;
-            _currentUser = currentUser;
         }
 
         public async Task<IEnumerable<IStorageProduct>> GetActiveProductsAsync()
@@ -26,13 +25,13 @@ namespace LittleLogBook.Data.Managers
 
             using (var command = _dataHandler.CreateCommand("GetActiveCloudStorageProducts"))
             {
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        returnValues.Add(new CloudStorageProduct(_currentUser.CloudUserId, reader));
+                        returnValues.Add(new CloudStorageProduct(CurrentUser.CloudUserId, reader));
                     }
                 }
             }
@@ -46,13 +45,13 @@ namespace LittleLogBook.Data.Managers
 
             using (var command = _dataHandler.CreateCommand("GetCloudStorageProducts"))
             {
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        returnValues.Add(new CloudStorageProduct(_currentUser.CloudUserId, reader));
+                        returnValues.Add(new CloudStorageProduct(CurrentUser.CloudUserId, reader));
                     }
                 }
             }
@@ -64,14 +63,14 @@ namespace LittleLogBook.Data.Managers
         {
             using (var command = _dataHandler.CreateCommand("GetCloudStorageProduct"))
             {
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
                 command.AddParameter("@CloudStorageProductId", productId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new CloudStorageProduct(_currentUser.CloudUserId, reader);
+                        return new CloudStorageProduct(CurrentUser.CloudUserId, reader);
                     }
                 }
             }
@@ -95,11 +94,11 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@ValidFrom", product.ValidFrom, DbType.DateTime);
                 command.AddParameter("@ValidTo", product.ValidTo, DbType.DateTime);
                 command.AddParameter("@OrderIndex", product.OrderIndex, DbType.Int32);
-                command.AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 if (await command.ExecuteNonQueryAsync() > 0)
                 {
-                    ((CloudStorageProduct) product).SetInternals(false, false, DateTime.UtcNow, _currentUser.CloudUserId);
+                    ((CloudStorageProduct) product).SetInternals(false, false, DateTime.UtcNow, CurrentUser.CloudUserId);
 
                     return true;
                 }
@@ -124,7 +123,7 @@ namespace LittleLogBook.Data.Managers
                     .AddParameter("@ValidFrom", product.ValidFrom, DbType.DateTime)
                     .AddParameter("@ValidTo", product.ValidTo, DbType.DateTime)
                     .AddParameter("@OrderIndex", product.OrderIndex, DbType.Int32)
-                    .AddParameter("@CreatedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@CreatedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 if (await command.ExecuteNonQueryAsync() > 0)
                 {
@@ -143,7 +142,7 @@ namespace LittleLogBook.Data.Managers
             {
                 command
                     .AddParameter("@ProductId", productId, DbType.Guid)
-                    .AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }
@@ -155,7 +154,7 @@ namespace LittleLogBook.Data.Managers
             {
                 command
                     .AddParameter("@ProductId", productId, DbType.Guid)
-                    .AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }
@@ -167,7 +166,7 @@ namespace LittleLogBook.Data.Managers
             {
                 command
                     .AddParameter("@ProductId", productId, DbType.Guid)
-                    .AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }
@@ -179,7 +178,7 @@ namespace LittleLogBook.Data.Managers
             {
                 command
                     .AddParameter("@ProductId", productId, DbType.Guid)
-                    .AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }

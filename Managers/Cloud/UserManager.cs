@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Security;
 using System.Threading.Tasks;
 
 using LittleLogBook.Data.Contracts;
@@ -9,15 +10,17 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class UserManager : IUserManager
-	{
+    public class UserManager : ManagerBase, IUserManager
+    {
         private readonly IDataHandler _dataHandler;
-        private readonly IUser _currentUser;
 
-        public UserManager(IDataHandler dataHandler, IUser currentUser)
+        private Action<IUser> _onUserChanged;
+
+        internal UserManager(IDataHandler dataHandler, Action<IUser>OnUserChanged)
+            : base(null)
         {
             _dataHandler = dataHandler;
-            _currentUser = currentUser;
+            _onUserChanged = OnUserChanged;
         }
 
         public async Task<IUser> GetUserAsync(string emailAddress)
@@ -46,22 +49,25 @@ namespace LittleLogBook.Data.Managers
 			return null;
 		}
 
-        public async Task<IUser> GetUserAsync(string emailAddress, string password)
+        public void Logout()
         {
-            emailAddress = (emailAddress + "").Trim();
-            password = (password + "").Trim();
-
-            if (emailAddress.Length == 0 || password.Length == 0)
+            if (CurrentUser == null)
             {
-                throw new ArgumentNullException("Email address and password may not be empty");
+                return;
             }
 
-            return await GetUserAsync(_dataHandler, emailAddress, password);
+            base.ClearUser();
+
+            _onUserChanged?.Invoke(CurrentUser);
         }
 
-
-        public static async Task<IUser> GetUserAsync(IDataHandler dataHandler, string emailAddress, string password)
+        public async Task<IUser> LoginAsync(string emailAddress, string password)
         {
+            if (CurrentUser != null)
+            {
+                throw new SecurityException("Previous user still logged in");
+            }
+
             emailAddress = (emailAddress + "").Trim();
             password = (password + "").Trim();
 
@@ -70,7 +76,7 @@ namespace LittleLogBook.Data.Managers
                 throw new ArgumentNullException("Email address and password may not be empty");
             }
 
-            using (var command = dataHandler.CreateCommand("GetCloudUserByLogin"))
+            using (var command = _dataHandler.CreateCommand("GetCloudUserByLogin"))
             {
                 command.AddParameter("@EmailAddress", emailAddress, DbType.String);
                 command.AddParameter("@Password", password, DbType.String);
@@ -79,12 +85,16 @@ namespace LittleLogBook.Data.Managers
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new CloudUser(Constants.SystemUserId, reader);
+                        base.SetUser(new CloudUser(Constants.SystemUserId, reader));
+
+                        _onUserChanged?.Invoke(CurrentUser);
+
+                        return CurrentUser;
                     }
                 }
             }
 
-            return null;
+            throw new SecurityException("Invalid username or password");
         }
 
         public async Task<IUser> GetUserAsync(Guid userId)
@@ -92,7 +102,7 @@ namespace LittleLogBook.Data.Managers
             using (var command = _dataHandler.CreateCommand("GetCloudUserByUserId"))
             {
                 command.AddParameter("@CloudUserId", userId, DbType.Guid);
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = command.OpenReader())
                 {
@@ -295,11 +305,11 @@ namespace LittleLogBook.Data.Managers
 
             using (var command = _dataHandler.CreateCommand("ChangeCloudUserEmailAddress"))
             {
-                command.AddParameter("@CloudUserId", user.CloudUserId, DbType.Guid, ParameterDirection.Input);
-                command.AddParameter("@EmailAddress", emailAddress, DbType.String, ParameterDirection.Input);
-                command.AddParameter("@CloudUserStatus", EnumCloudUserStatus.Unverified, DbType.String, ParameterDirection.Input);
-                command.AddParameter("@DateModified", DateTime.UtcNow, DbType.DateTime, ParameterDirection.Input);
-                command.AddParameter("@ModifiedByUserId", user.ViewedByUserId, DbType.Guid, ParameterDirection.Input);
+                command.AddParameter("@CloudUserId", user.CloudUserId, DbType.Guid);
+                command.AddParameter("@EmailAddress", emailAddress, DbType.String);
+                command.AddParameter("@CloudUserStatus", EnumCloudUserStatus.Unverified, DbType.String);
+                command.AddParameter("@DateModified", DateTime.UtcNow, DbType.DateTime);
+                command.AddParameter("@ModifiedByUserId", user.ViewedByUserId, DbType.Guid);
 
                 if ((await command.ExecuteNonQueryAsync()) > 0)
                 {

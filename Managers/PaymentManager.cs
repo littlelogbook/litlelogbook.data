@@ -9,15 +9,14 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class PaymentManager : IPaymentManager
+    public class PaymentManager : ManagerBase, IPaymentManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly IUser _currentUser;
 
-        public PaymentManager(IDataHandler dataHandler, IUser currentUser)
+        internal PaymentManager(IDataHandler dataHandler, IUser currentUser)
+            : base(currentUser)
         {
             _dataHandler = dataHandler;
-            _currentUser = currentUser;
         }
 
         public async Task<IEnumerable<Payment>> GetPaymentsAsync(Guid? userId = null, DateTime? dateFrom = null, DateTime? dateTo = null)
@@ -26,7 +25,7 @@ namespace LittleLogBook.Data.Managers
 
             using (var command = _dataHandler.CreateCommand("GetPayments"))
             {
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
                 command.AddParameter("@UserId", userId, DbType.Guid);
                 command.AddParameter("@DateFrom", dateFrom, DbType.DateTime);
                 command.AddParameter("@DateTo", dateTo, DbType.DateTime);
@@ -35,7 +34,7 @@ namespace LittleLogBook.Data.Managers
                 {
                     while (await reader.ReadAsync())
                     {
-                        returnValues.Add(new Payment(_currentUser.CloudUserId, reader));
+                        returnValues.Add(new Payment(CurrentUser.CloudUserId, reader));
                     }
                 }
             }
@@ -52,14 +51,14 @@ namespace LittleLogBook.Data.Managers
 
             using (var command = _dataHandler.CreateCommand("GetPayment"))
             {
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
                 command.AddParameter("@PaymentId", paymentId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new Payment(_currentUser.CloudUserId, reader);
+                        return new Payment(CurrentUser.CloudUserId, reader);
                     }
                 }
             }
@@ -76,14 +75,14 @@ namespace LittleLogBook.Data.Managers
 
             using (var command = _dataHandler.CreateCommand("GetPaymentByReference"))
             {
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
                 command.AddParameter("@Reference", reference, DbType.String);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new Payment(_currentUser.CloudUserId, reader);
+                        return new Payment(CurrentUser.CloudUserId, reader);
                     }
                 }
             }
@@ -95,7 +94,7 @@ namespace LittleLogBook.Data.Managers
             string reference, Guid paymentReferenceId, EnumPaymentReferenceType paymentReferenceType, ICurrency currency,
             double amount, string userIpAddress, ICountry userCountry, string userReferer, string userAgent, string userHost)
         {
-            var payment = new Payment(_currentUser.CloudUserId, userId, paymentGatewayProvider, reference, paymentReferenceId,
+            var payment = new Payment(CurrentUser.CloudUserId, userId, paymentGatewayProvider, reference, paymentReferenceId,
                 paymentReferenceType, currency.CurrencyId, currency.ExchangeRate, amount);
 
             using (var command = _dataHandler.CreateCommand("PaymentRequested"))
@@ -116,14 +115,14 @@ namespace LittleLogBook.Data.Managers
                     .AddParameter("@UserReferer", userReferer, DbType.String)
                     .AddParameter("@UserAgent", userAgent, DbType.String)
                     .AddParameter("@UserHost", userHost, DbType.String)
-                    .AddParameter("@CreatedByUserId", _currentUser.CloudUserId, DbType.Guid)
+                    .AddParameter("@CreatedByUserId", CurrentUser.CloudUserId, DbType.Guid)
                     .AddParameter("@CustomerPaymentReferenceNumber", null, DbType.Int32, ParameterDirection.Output);
 
                 if (await command.ExecuteNonQueryAsync() > 0)
                 {
-                    payment.SetInternals(false, false, DateTime.UtcNow, _currentUser.CloudUserId);
+                    payment.SetInternals(false, false, DateTime.UtcNow, CurrentUser.CloudUserId);
                     payment.CustomerPaymentReferenceNumber = (int) command.Parameters["@CustomerPaymentReferenceNumber"].Value;
-                    payment.ViewedByUserId = _currentUser.CloudUserId;
+                    payment.ViewedByUserId = CurrentUser.CloudUserId;
                     payment.DateViewed = DateTime.UtcNow;
                 }
             }
@@ -140,7 +139,7 @@ namespace LittleLogBook.Data.Managers
                     .AddParameter("@Reference", reference, DbType.String)
                     .AddParameter("@PaymentStatusId", (int) paymentStatus, DbType.Int32)
                     .AddParameter("@PaymentStatus", paymentStatus.ToString(), DbType.String)
-                    .AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }
@@ -153,7 +152,7 @@ namespace LittleLogBook.Data.Managers
                 command
                     .AddParameter("@PaymentId", paymentId, DbType.Guid)
                     .AddParameter("@Reference", reference, DbType.String)
-                    .AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }
@@ -168,7 +167,7 @@ namespace LittleLogBook.Data.Managers
                     .AddParameter("@Reference", reference, DbType.String)
                     .AddParameter("@PaymentStatus", paymentStatusText, DbType.String)
                     .AddParameter("@PaymentStatusId", (int) paymentStatus, DbType.Int32)
-                    .AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }
@@ -181,7 +180,7 @@ namespace LittleLogBook.Data.Managers
                 command
                     .AddParameter("@PaymentId", paymentId, DbType.String)
                     .AddParameter("@ExceptionMessage", failException.Message, DbType.String)
-                    .AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }
@@ -193,7 +192,7 @@ namespace LittleLogBook.Data.Managers
             {
                 command
                     .AddParameter("@PaymentId", paymentId, DbType.Guid)
-                    .AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }

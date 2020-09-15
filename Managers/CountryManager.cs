@@ -10,15 +10,14 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class CountryManager : ICountryManager
+    public class CountryManager : ManagerBase, ICountryManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly IUser _currentUser;
 
-        public CountryManager(IDataHandler dataHandler, IUser currentUser)
+        internal CountryManager(IDataHandler dataHandler, IUser currentUser)
+            : base(currentUser)
         {
             _dataHandler = dataHandler;
-            _currentUser = currentUser;
         }
 
         public async Task<ICountry> GetDefaultCountryAsync() =>
@@ -31,13 +30,13 @@ namespace LittleLogBook.Data.Managers
 
             using (var command = _dataHandler.CreateCommand("GetActiveCountries"))
             {
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        returnValues.Add(new Country(_currentUser.CloudUserId, reader));
+                        returnValues.Add(new Country(CurrentUser.CloudUserId, reader));
                     }
                 }
             }
@@ -51,13 +50,13 @@ namespace LittleLogBook.Data.Managers
 
             using (var command = _dataHandler.CreateCommand("GetCountries"))
             {
-                _dataHandler.AddParameter(command, "@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                _dataHandler.AddParameter(command, "@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        returnValues.Add(new Country(_currentUser.CloudUserId, reader));
+                        returnValues.Add(new Country(CurrentUser.CloudUserId, reader));
                     }
                 }
             }
@@ -70,14 +69,14 @@ namespace LittleLogBook.Data.Managers
             using (var command = _dataHandler.CreateCommand("GetCountryByIso3"))
             {
                 command
-                    .AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid)
+                    .AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid)
                     .AddParameter("@CountryIso3", countryIso3, DbType.String);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new Country(_currentUser.CloudUserId, reader);
+                        return new Country(CurrentUser.CloudUserId, reader);
                     }
                 }
             }
@@ -90,7 +89,7 @@ namespace LittleLogBook.Data.Managers
             using (var command = _dataHandler.CreateCommand("GetCountry"))
             {
                 command
-                    .AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid)
+                    .AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid)
                     .AddParameter("@CountryId", countryId, DbType.Int32);
 
                 using (var reader = await command.ExecuteReaderAsync())

@@ -9,15 +9,14 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class BackupManager : IBackupManager
+    public class BackupManager : ManagerBase, IBackupManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly IUser _currentUser;
 
-        public BackupManager(IDataHandler dataHandler, IUser currentUser)
+        internal BackupManager(IDataHandler dataHandler, IUser currentUser)
+            : base(currentUser)
         {
             _dataHandler = dataHandler;
-            _currentUser = currentUser;
         }
 
         public async Task<IBackupCost> GetBackupCostAsync(Guid cloudUserId, long dataLength)
@@ -54,13 +53,13 @@ namespace LittleLogBook.Data.Managers
             using (var command = _dataHandler.CreateCommand("GetBackupEntry"))
             {
                 command.AddParameter("@BackupEntryId", backupEntryId, DbType.Guid);
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new BackupEntry(_currentUser.CloudUserId, reader);
+                        return new BackupEntry(CurrentUser.CloudUserId, reader);
                     }
                 }
             }
@@ -80,13 +79,13 @@ namespace LittleLogBook.Data.Managers
             using (var command = _dataHandler.CreateCommand("GetBackupEntries"))
             {
                 command.AddParameter("@CloudUserId", cloudUserId, DbType.Guid);
-                command.AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        returnValues.Add(new BackupEntry(_currentUser.CloudUserId, reader));
+                        returnValues.Add(new BackupEntry(CurrentUser.CloudUserId, reader));
                     }
                 }
             }
@@ -102,11 +101,11 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@BytesTransferred", backupEntry.BytesTransferred, DbType.Int64);
                 command.AddParameter("@BackupName", backupEntry.BackupName, DbType.String);
                 command.AddParameter("@BackupDescription", backupEntry.BackupDescription, DbType.String);
-                command.AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 if (await command.ExecuteNonQueryAsync() > 0)
                 {
-                    ((BackupEntry)backupEntry).SetInternals(false, false, DateTime.UtcNow, _currentUser.CloudUserId);
+                    ((BackupEntry)backupEntry).SetInternals(false, false, DateTime.UtcNow, CurrentUser.CloudUserId);
 
                     return true;
                 }
@@ -122,7 +121,7 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@BackupEntryId", backupEntryId, DbType.Guid);
                 command.AddParameter("@BytesTransferred", bytesTransferred, DbType.Int64);
                 command.AddParameter("@BackupEntryStatusId", backupEntryStatus, DbType.Int64);
-                command.AddParameter("@ModifiedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }
@@ -137,11 +136,11 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@BackupEntryTypeId", (int) backupEntry.BackupEntryType, DbType.Int32);
                 command.AddParameter("@BackupFilename", backupEntry.BackupFilename, DbType.String);
                 command.AddParameter("@PlannedBackupSize", backupEntry.PlannedBackupSize, DbType.Int64);
-                command.AddParameter("@CreatedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@CreatedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 if (await command.ExecuteNonQueryAsync() > 0)
                 {
-                    ((BackupEntry)backupEntry).SetInternals(false, false, DateTime.UtcNow, _currentUser.CloudUserId);
+                    ((BackupEntry)backupEntry).SetInternals(false, false, DateTime.UtcNow, CurrentUser.CloudUserId);
 
                     return true;
                 }

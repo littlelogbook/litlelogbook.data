@@ -9,15 +9,14 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class UserPurseManager : IUserPurseManager
+    public class UserPurseManager : ManagerBase, IUserPurseManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly IUser _currentUser;
 
-        public UserPurseManager(IDataHandler dataHandler, IUser currentUser)
+        internal UserPurseManager(IDataHandler dataHandler, IUser currentUser)
+            : base(currentUser)
         {
             _dataHandler = dataHandler;
-            _currentUser = currentUser;
         }
 
         public async Task<IUserPurse> GetUserPurseAsync(Guid userId)
@@ -26,13 +25,13 @@ namespace LittleLogBook.Data.Managers
             {
                 command
                     .AddParameter("@UserId", userId, DbType.Guid)
-                    .AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new UserPurse(_currentUser.CloudUserId, reader);
+                        return new UserPurse(CurrentUser.CloudUserId, reader);
                     }
                 }
 
@@ -53,13 +52,13 @@ namespace LittleLogBook.Data.Managers
             {
                 command
                     .AddParameter("@UserPurseId", userPurseId, DbType.Guid)
-                    .AddParameter("@ViewedByUserId", _currentUser.CloudUserId, DbType.Guid);
+                    .AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (await reader.ReadAsync())
                     {
-                        returnValues.Add(new UserPurseTransaction(_currentUser.CloudUserId, reader));
+                        returnValues.Add(new UserPurseTransaction(CurrentUser.CloudUserId, reader));
                     }
                 }
 
