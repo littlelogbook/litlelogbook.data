@@ -8,8 +8,11 @@ namespace LittleLogBook.Data.Entities.Cloud
     public class Statistic : IStatistic
     {
         public string ItemName { get; set; }
+        
         public string ItemLabel { get; set; }
+        
         public string ItemValue { get; set; }
+        
         public Guid ViewedByUserId { get; }
 
         public Statistic(Guid ViewedByUserId, IDataReader Reader)

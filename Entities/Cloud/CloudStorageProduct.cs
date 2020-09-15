@@ -6,7 +6,7 @@ using LittleLogBook.Data.Entities.Base;
 
 namespace LittleLogBook.Data.Entities.Cloud
 {
-    public class CloudStorageProduct : BaseCloudStorageProduct, ICloudStorageProduct
+    public class CloudStorageProduct : BaseCloudStorageProduct, IStorageProduct
     {
         public CloudStorageProduct(Guid CreatedByUserId, string ProductName) : base(CreatedByUserId, ProductName)
         {

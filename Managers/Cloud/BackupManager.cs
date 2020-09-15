@@ -9,18 +9,18 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class CloudBackupManager : ICloudBackupManager
+    public class BackupManager : IBackupManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _currentUser;
+        private readonly IUser _currentUser;
 
-        public CloudBackupManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public BackupManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;
         }
 
-        public async Task<ICloudBackupCost> GetBackupCostAsync(Guid cloudUserId, long dataLength)
+        public async Task<IBackupCost> GetBackupCostAsync(Guid cloudUserId, long dataLength)
         {
             if (Guid.Empty.Equals(cloudUserId))
             {

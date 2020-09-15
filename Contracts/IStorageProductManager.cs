@@ -6,7 +6,7 @@ using LittleLogBook.Data.Contracts;
 
 namespace LittleLogBook.Data.Contracts
 {
-    public interface ICloudStorageProductManager
+    public interface IStorageProductManager
     {
         Task<bool> ActivateProductAsync(Guid productId);
         
@@ -14,16 +14,16 @@ namespace LittleLogBook.Data.Contracts
         
         Task<bool> ExpireProductAsync(Guid productId);
         
-        Task<IEnumerable<ICloudStorageProduct>> GetActiveProductsAsync();
+        Task<IEnumerable<IStorageProduct>> GetActiveProductsAsync();
         
-        Task<ICloudStorageProduct> GetProductAsync(Guid productId);
+        Task<IStorageProduct> GetProductAsync(Guid productId);
         
-        Task<IEnumerable<ICloudStorageProduct>> GetProductsAsync();
+        Task<IEnumerable<IStorageProduct>> GetProductsAsync();
         
-        Task<bool> InsertProductAsync(ICloudStorageProduct product);
+        Task<bool> InsertProductAsync(IStorageProduct product);
         
         Task<bool> SuspendProductAsync(Guid productId);
         
-        Task<bool> UpdateProductAsync(ICloudStorageProduct product);
+        Task<bool> UpdateProductAsync(IStorageProduct product);
     }
 }

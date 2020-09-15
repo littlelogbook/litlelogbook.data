@@ -13,7 +13,7 @@ namespace LittleLogBook.Data.Managers
         private IPaymentManager _paymentManager;
         private IReceiptManager _receiptManager;
 
-        public InvoiceManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public InvoiceManager(IDataHandler dataHandler, IUser currentUser)
         {
             _paymentManager = new PaymentManager(dataHandler, currentUser);
             _receiptManager = new ReceiptManager(dataHandler, currentUser);
@@ -44,7 +44,7 @@ namespace LittleLogBook.Data.Managers
             return await _paymentManager.PaymentRedirectedAsync(paymentId, reference);
         }
 
-        public async Task<Payment> PaymentRequestedAsync(Guid userId, EnumPaymentGatewayProvider paymentGatewayProvider,
+        public async Task<IPayment> PaymentRequestedAsync(Guid userId, EnumPaymentGatewayProvider paymentGatewayProvider,
             string reference, Guid paymentReferenceId, EnumPaymentReferenceType paymentReferenceType, ICurrency currency,
             double amount, string userIpAddress, ICountry userCountry, string userReferer, string userAgent, string userHost)
         {
@@ -52,27 +52,27 @@ namespace LittleLogBook.Data.Managers
                 paymentReferenceType, currency, amount, userIpAddress, userCountry, userReferer, userAgent, userHost);
         }
 
-        public async Task<IEnumerable<Payment>> GetPaymentsAsync(Guid? userId = null, DateTime? dateFrom = null, DateTime? dateTo = null)
+        public async Task<IEnumerable<IPayment>> GetPaymentsAsync(Guid? userId = null, DateTime? dateFrom = null, DateTime? dateTo = null)
         {
             return await _paymentManager.GetPaymentsAsync(userId, dateFrom, dateTo);
         }
 
-        public async Task<Payment> GetPaymentAsync(Guid paymentId)
+        public async Task<IPayment> GetPaymentAsync(Guid paymentId)
         {
             return await _paymentManager.GetPaymentAsync(paymentId);
         }
 
-        public async Task<Payment> GetPaymentByReferenceAsync(string reference)
+        public async Task<IPayment> GetPaymentByReferenceAsync(string reference)
         {
             return await _paymentManager.GetPaymentByReferenceAsync(reference);
         }
 
-        public async Task CreateReceiptItemsAsync(ReceiptItem[] receiptItems)
+        public async Task CreateReceiptItemsAsync(IReceiptItem[] receiptItems)
         {
             await _receiptManager.CreateReceiptItemsAsync(receiptItems);
         }
 
-        public async Task<IEnumerable<ReceiptItem>> GetReceiptItemsAsync(Guid paymentId)
+        public async Task<IEnumerable<IReceiptItem>> GetReceiptItemsAsync(Guid paymentId)
         {
             return await _receiptManager.GetReceiptItemsAsync(paymentId);
         }

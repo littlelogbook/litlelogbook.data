@@ -2,7 +2,7 @@
 
 namespace LittleLogBook.Data.Contracts
 {
-    public interface ICloudUserAudit
+    public interface IUserAudit
     {
         string AuditDescription { get; }
         

@@ -6,7 +6,7 @@ using LittleLogBook.Data.Entities.Base.Cloud;
 
 namespace LittleLogBook.Data.Entities.Cloud
 {
-    public class CloudUser : BaseCloudUser, ICloudUser
+    public class CloudUser : BaseCloudUser, IUser
 	{
 		public string EmailAddressUrlEncoded
 		{

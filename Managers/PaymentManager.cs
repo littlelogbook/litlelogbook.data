@@ -12,9 +12,9 @@ namespace LittleLogBook.Data.Managers
     public class PaymentManager : IPaymentManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _currentUser;
+        private readonly IUser _currentUser;
 
-        public PaymentManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public PaymentManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;

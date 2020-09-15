@@ -11,9 +11,9 @@ namespace LittleLogBook.Data.Managers
     public class BasketManager : IBasketManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _currentUser;
+        private readonly IUser _currentUser;
 
-        public BasketManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public BasketManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;

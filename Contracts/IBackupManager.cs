@@ -6,11 +6,11 @@ using LittleLogBook.Data.Entities.Cloud;
 
 namespace LittleLogBook.Data.Contracts
 {
-    public interface ICloudBackupManager
+    public interface IBackupManager
     {
         Task<bool> FinishBackupEntryAsync(Guid backupEntryId, EnumBackupEntryStatus backupEntryStatus, long bytesTransferred);
         
-        Task<ICloudBackupCost> GetBackupCostAsync(Guid cloudUserId, long dataLength);
+        Task<IBackupCost> GetBackupCostAsync(Guid cloudUserId, long dataLength);
         
         Task<IEnumerable<IBackupEntry>> GetBackupEntriesAsync(Guid cloudUserId);
         

@@ -9,18 +9,18 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class CloudStorageProductManager : ICloudStorageProductManager
+    public class StorageProductManager : IStorageProductManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _currentUser;
+        private readonly IUser _currentUser;
 
-        public CloudStorageProductManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public StorageProductManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;
         }
 
-        public async Task<IEnumerable<ICloudStorageProduct>> GetActiveProductsAsync()
+        public async Task<IEnumerable<IStorageProduct>> GetActiveProductsAsync()
         {
             var returnValues = new List<CloudStorageProduct>();
 
@@ -40,7 +40,7 @@ namespace LittleLogBook.Data.Managers
             return returnValues;
         }
 
-        public async Task<IEnumerable<ICloudStorageProduct>> GetProductsAsync()
+        public async Task<IEnumerable<IStorageProduct>> GetProductsAsync()
         {
             var returnValues = new List<CloudStorageProduct>();
 
@@ -60,7 +60,7 @@ namespace LittleLogBook.Data.Managers
             return returnValues;
         }
 
-        public async Task<ICloudStorageProduct> GetProductAsync(Guid productId)
+        public async Task<IStorageProduct> GetProductAsync(Guid productId)
         {
             using (var command = _dataHandler.CreateCommand("GetCloudStorageProduct"))
             {
@@ -79,7 +79,7 @@ namespace LittleLogBook.Data.Managers
             return null;
         }
 
-        public async Task<bool> UpdateProductAsync(ICloudStorageProduct product)
+        public async Task<bool> UpdateProductAsync(IStorageProduct product)
         {
             if (product.IsDirty) return false;
 
@@ -108,7 +108,7 @@ namespace LittleLogBook.Data.Managers
             return false;
         }
 
-        public async Task<bool> InsertProductAsync(ICloudStorageProduct product)
+        public async Task<bool> InsertProductAsync(IStorageProduct product)
         {
             if (product.IsDirty) return false;
 

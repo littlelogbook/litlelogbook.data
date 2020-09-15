@@ -13,9 +13,9 @@ namespace LittleLogBook.Data.Managers
     public class CountryManager : ICountryManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _currentUser;
+        private readonly IUser _currentUser;
 
-        public CountryManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public CountryManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;

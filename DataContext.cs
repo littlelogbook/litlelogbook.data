@@ -7,9 +7,9 @@ namespace LittleLogBook.Data.Core
     public class DataContext : IDataContext
     {
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _cloudUser;
+        private readonly IUser _cloudUser;
 
-        public DataContext(IDataHandler dataHandler, ICloudUser cloudUser)
+        public DataContext(IDataHandler dataHandler, IUser cloudUser)
         {
             _dataHandler = dataHandler;
             _cloudUser = cloudUser;
@@ -19,11 +19,11 @@ namespace LittleLogBook.Data.Core
 
         public IInvoiceManager InvoiceManager => new InvoiceManager(_dataHandler, _cloudUser);
 
-        public ICloudUserManager UserManager => new CloudUserManager(_dataHandler, _cloudUser);
+        public IUserManager UserManager => new UserManager(_dataHandler, _cloudUser);
 
-        public ICloudBackupManager BackupManager => new CloudBackupManager(_dataHandler, _cloudUser);
+        public IBackupManager BackupManager => new BackupManager(_dataHandler, _cloudUser);
 
-        public ICloudStorageProductManager StorageProductManager => new CloudStorageProductManager(_dataHandler, _cloudUser);
+        public IStorageProductManager StorageProductManager => new StorageProductManager(_dataHandler, _cloudUser);
 
         public ICountryManager CountryManager => new CountryManager(_dataHandler, _cloudUser);
 

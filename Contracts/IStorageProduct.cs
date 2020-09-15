@@ -4,7 +4,7 @@ using LittleLogBook.Data.Entities;
 
 namespace LittleLogBook.Data.Contracts
 {
-    public interface ICloudStorageProduct
+    public interface IStorageProduct
     {
         Guid CloudStorageProductId { get; }
         
@@ -27,6 +27,7 @@ namespace LittleLogBook.Data.Contracts
         DateTime? ValidFrom { get; set; }
         
         DateTime? ValidTo { get; set; }
+
         bool IsDirty { get; }
     }
 }

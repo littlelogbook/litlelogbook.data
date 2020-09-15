@@ -2,7 +2,7 @@
 {
     public interface IDataContext
     {
-        ICloudBackupManager BackupManager { get; }
+        IBackupManager BackupManager { get; }
         
         IBasketManager BasketManager { get; }
         
@@ -16,9 +16,9 @@
         
         IStatisticsManager StatisticsManager { get; }
         
-        ICloudStorageProductManager StorageProductManager { get; }
+        IStorageProductManager StorageProductManager { get; }
         
-        ICloudUserManager UserManager { get; }
+        IUserManager UserManager { get; }
         
         IUserPurseManager UserPurseManager { get; }
         

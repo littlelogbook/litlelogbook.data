@@ -6,21 +6,21 @@ using LittleLogBook.Data.Entities.Cloud;
 
 namespace LittleLogBook.Data.Contracts
 {
-    public interface ICloudUserManager
+    public interface IUserManager
     {
-        Task<ICloudUser> GetUserAsync(Guid userId);
+        Task<IUser> GetUserAsync(Guid userId);
 
-        Task<ICloudUser> GetUserAsync(string emailAddress);
+        Task<IUser> GetUserAsync(string emailAddress);
 
-        Task<ICloudUser> GetUserAsync(string emailAddress, string password);
+        Task<IUser> GetUserAsync(string emailAddress, string password);
 
-        Task<IEnumerable<ICloudUserAudit>> GetUserAuditsAsync(Guid cloudUserId, DateTime? dateFrom = null, DateTime? dateTo = null);
+        Task<IEnumerable<IUserAudit>> GetUserAuditsAsync(Guid cloudUserId, DateTime? dateFrom = null, DateTime? dateTo = null);
 
         Task<bool> IsEmailAddressAvailableAsync(string emailAddress);
 
-        Task<bool> UpdateUserAsync(CloudUser user);
+        Task<bool> UpdateUserAsync(IUser user);
 
-        Task<bool> RegisterUserAsync(CloudUser user, string password);
+        Task<bool> RegisterUserAsync(IUser user, string password);
 
         Task<bool> VerifyUserEmailAddressAsync(string emailAddress, string emailAddressVerificationCode);
 
@@ -28,6 +28,6 @@ namespace LittleLogBook.Data.Contracts
 
         Task<bool> ChangeUserPasswordAsync(string verificationCodeValue, string emailAddress, string newPassword);
 
-        Task<bool> ChangeUserEmailAddressAsync(CloudUser user, string emailAddress);
+        Task<bool> ChangeUserEmailAddressAsync(IUser user, string emailAddress);
 	}
 }

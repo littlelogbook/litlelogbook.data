@@ -8,10 +8,10 @@ namespace LittleLogBook.Data.Contracts
 {
     public interface IReceiptManager
     {
-        Task<ReceiptItem> GetReceiptItemAsync(Guid receiptItemId);
+        Task<IReceiptItem> GetReceiptItemAsync(Guid receiptItemId);
 
-        Task<IEnumerable<ReceiptItem>> GetReceiptItemsAsync(Guid paymentId);
+        Task<IEnumerable<IReceiptItem>> GetReceiptItemsAsync(Guid paymentId);
 
-        Task CreateReceiptItemsAsync(ReceiptItem[] receiptItems);
+        Task CreateReceiptItemsAsync(IReceiptItem[] receiptItems);
     }
 }

@@ -11,9 +11,9 @@ namespace LittleLogBook.Data.Managers
     public class VerificationCodeManager : IVerificationCodeManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _currentUser;
+        private readonly IUser _currentUser;
 
-        public VerificationCodeManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public VerificationCodeManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;

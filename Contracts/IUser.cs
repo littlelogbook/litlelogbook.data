@@ -2,7 +2,7 @@
 
 namespace LittleLogBook.Data.Contracts
 {
-	public interface ICloudUser
+	public interface IUser
 	{
 		Guid CloudUserId { get; }
 
@@ -19,5 +19,13 @@ namespace LittleLogBook.Data.Contracts
 		string PreferredCurrencyIso { get; set; }
 
 		EnumCloudUserStatus CloudUserStatus { get; set; }
+
+		string EmailAddressUrlEncoded { get; }
+
+        Guid? ViewedByUserId { get; }
+
+        Guid CreatedByUserId { get; }
+
+        string ToString();
 	}
 }

@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+
+using LittleLogBook.Data.Contracts;
 using LittleLogBook.Data.Entities.Base;
 
 namespace LittleLogBook.Data.Entities
 {
-	public class Payment : BasePayment
-	{
+    public class Payment : BasePayment, IPayment
+    {
         public string AmountText
         {
             get
@@ -68,15 +69,16 @@ namespace LittleLogBook.Data.Entities
             }
         }
 
-        public Payment(Guid CreatedByUserId, Guid UserId, EnumPaymentGatewayProvider PaymentGatewayProvider, string Reference, Guid PaymentReferenceId, EnumPaymentReferenceType PaymentReferenceType, string CurrencyId, double ExchangeRate, double Amount)
+        public Payment(Guid CreatedByUserId, Guid UserId, EnumPaymentGatewayProvider PaymentGatewayProvider, string Reference,
+            Guid PaymentReferenceId, EnumPaymentReferenceType PaymentReferenceType, string CurrencyId, double ExchangeRate, double Amount)
             : base(CreatedByUserId, UserId, PaymentGatewayProvider, Reference, PaymentReferenceId, PaymentReferenceType, CurrencyId, ExchangeRate, Amount)
-		{
+        {
 
-		}
+        }
 
-		public Payment(Guid ViewedByUserId, SqlDataReader Reader) : base(ViewedByUserId, Reader)
-		{
+        public Payment(Guid ViewedByUserId, SqlDataReader Reader) : base(ViewedByUserId, Reader)
+        {
 
-		}
-	}
+        }
+    }
 }

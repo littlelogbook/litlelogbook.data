@@ -12,15 +12,15 @@ namespace LittleLogBook.Data.Managers
     public class ReceiptManager : IReceiptManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _currentUser;
+        private readonly IUser _currentUser;
 
-        public ReceiptManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public ReceiptManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;
         }
 
-        public async Task<ReceiptItem> GetReceiptItemAsync(Guid receiptItemId)
+        public async Task<IReceiptItem> GetReceiptItemAsync(Guid receiptItemId)
         {
             using (var command = _dataHandler.CreateCommand("GetReceiptItem"))
             {
@@ -39,9 +39,9 @@ namespace LittleLogBook.Data.Managers
             return null;
         }
 
-        public async Task<IEnumerable<ReceiptItem>> GetReceiptItemsAsync(Guid paymentId)
+        public async Task<IEnumerable<IReceiptItem>> GetReceiptItemsAsync(Guid paymentId)
         {
-            var returnValues = new List<ReceiptItem>();
+            var returnValues = new List<IReceiptItem>();
 
             using (var command = _dataHandler.CreateCommand("GetReceiptItems"))
             {
@@ -60,7 +60,7 @@ namespace LittleLogBook.Data.Managers
             return returnValues;
         }
 
-        public async Task CreateReceiptItemsAsync(ReceiptItem[] receiptItems)
+        public async Task CreateReceiptItemsAsync(IReceiptItem[] receiptItems)
         {
             if (receiptItems != null && receiptItems.Length > 0)
             {
@@ -85,9 +85,7 @@ namespace LittleLogBook.Data.Managers
 
                         if ((await command.ExecuteNonQueryAsync()) > 0)
                         {
-                            receiptItem.SetInternals(false, false, DateTime.UtcNow, _currentUser.CloudUserId);
-                            receiptItem.ViewedByUserId = _currentUser.CloudUserId;
-                            receiptItem.DateViewed = DateTime.UtcNow;
+                            ((ReceiptItem)receiptItem).SetInternals(false, false, DateTime.UtcNow, _currentUser.CloudUserId);
                         }
                     }
                 }

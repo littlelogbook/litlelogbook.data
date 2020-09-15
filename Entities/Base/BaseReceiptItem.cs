@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 
 namespace LittleLogBook.Data.Entities.Base
 {
-	public class BaseReceiptItem : BaseEntity
+    public class BaseReceiptItem : BaseEntity
 	{
         private Guid _receiptItemId = Guid.NewGuid();
         private Guid _paymentId;

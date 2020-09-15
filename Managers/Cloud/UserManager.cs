@@ -9,18 +9,18 @@ using LittleLogBook.Data.SqlConnectivity;
 
 namespace LittleLogBook.Data.Managers
 {
-    public class CloudUserManager : ICloudUserManager
+    public class UserManager : IUserManager
 	{
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _currentUser;
+        private readonly IUser _currentUser;
 
-        public CloudUserManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public UserManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;
         }
 
-        public async Task<ICloudUser> GetUserAsync(string emailAddress)
+        public async Task<IUser> GetUserAsync(string emailAddress)
 		{
             emailAddress = (emailAddress + "").Trim();
 
@@ -46,7 +46,7 @@ namespace LittleLogBook.Data.Managers
 			return null;
 		}
 
-        public async Task<ICloudUser> GetUserAsync(string emailAddress, string password)
+        public async Task<IUser> GetUserAsync(string emailAddress, string password)
         {
             emailAddress = (emailAddress + "").Trim();
             password = (password + "").Trim();
@@ -60,7 +60,7 @@ namespace LittleLogBook.Data.Managers
         }
 
 
-        public static async Task<ICloudUser> GetUserAsync(IDataHandler dataHandler, string emailAddress, string password)
+        public static async Task<IUser> GetUserAsync(IDataHandler dataHandler, string emailAddress, string password)
         {
             emailAddress = (emailAddress + "").Trim();
             password = (password + "").Trim();
@@ -87,7 +87,7 @@ namespace LittleLogBook.Data.Managers
             return null;
         }
 
-        public async Task<ICloudUser> GetUserAsync(Guid userId)
+        public async Task<IUser> GetUserAsync(Guid userId)
         {
             using (var command = _dataHandler.CreateCommand("GetCloudUserByUserId"))
             {
@@ -106,9 +106,9 @@ namespace LittleLogBook.Data.Managers
             return null;
         }
 
-        public async Task<IEnumerable<ICloudUserAudit>> GetUserAuditsAsync(Guid cloudUserId, DateTime? dateFrom = null, DateTime? dateTo = null)
+        public async Task<IEnumerable<IUserAudit>> GetUserAuditsAsync(Guid cloudUserId, DateTime? dateFrom = null, DateTime? dateTo = null)
         {
-            var returnValues = new List<ICloudUserAudit>();
+            var returnValues = new List<IUserAudit>();
 
             using (var command = _dataHandler.CreateCommand("GetCloudUserAudits"))
             {
@@ -147,7 +147,7 @@ namespace LittleLogBook.Data.Managers
             }
 		}
 
-		public async Task<bool> UpdateUserAsync(CloudUser user)
+		public async Task<bool> UpdateUserAsync(IUser user)
 		{
             using (var command = _dataHandler.CreateCommand("UpdateCloudUser"))
             {
@@ -161,7 +161,7 @@ namespace LittleLogBook.Data.Managers
 
                 if ((await command.ExecuteNonQueryAsync()) > 0)
                 {
-                    user.SetInternals(false, false, DateTime.UtcNow, user.ViewedByUserId);
+                    ((CloudUser)user).SetInternals(false, false, DateTime.UtcNow, user.ViewedByUserId);
 
                     return true;
                 }
@@ -170,7 +170,7 @@ namespace LittleLogBook.Data.Managers
 			return false;
 		}
 
-		public async Task<bool> RegisterUserAsync(CloudUser user, string password)
+		public async Task<bool> RegisterUserAsync(IUser user, string password)
 		{
 			user.EmailAddress = (user.EmailAddress + "").Trim();
 
@@ -199,7 +199,8 @@ namespace LittleLogBook.Data.Managers
                 if ((await command.ExecuteNonQueryAsync()) > 0)
                 {
                     user.CloudUserStatus = EnumCloudUserStatus.Unverified;
-                    user.SetInternals(false, false, null, null);
+
+                    ((CloudUser)user).SetInternals(false, false, null, null);
 
                     //var verificationCode = VerificationCodeManager.GenerateVerificationCode(Constants.SystemUserId, user.EmailAddress,
                     //    EnumVerificationType.ForgotPassword, EnumVerificationCodeType.Complex, Constants.SystemConnectionId);
@@ -280,7 +281,7 @@ namespace LittleLogBook.Data.Managers
             }
 		}
 
-		public async Task<bool> ChangeUserEmailAddressAsync(CloudUser user, string emailAddress)
+		public async Task<bool> ChangeUserEmailAddressAsync(IUser user, string emailAddress)
 		{
 			if (user == null)
 			{
@@ -303,7 +304,7 @@ namespace LittleLogBook.Data.Managers
                 if ((await command.ExecuteNonQueryAsync()) > 0)
                 {
                     user.EmailAddress = emailAddress;
-                    user.SetInternals(false, false, DateTime.UtcNow, user.ViewedByUserId);
+                    ((CloudUser)user).SetInternals(false, false, DateTime.UtcNow, user.ViewedByUserId);
 
                     if (user.EmailAddress.Equals(emailAddress, StringComparison.InvariantCultureIgnoreCase))
                     {

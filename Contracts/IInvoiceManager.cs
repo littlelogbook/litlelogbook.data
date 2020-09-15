@@ -8,15 +8,15 @@ namespace LittleLogBook.Data.Contracts
 {
     public interface IInvoiceManager
     {
-        Task CreateReceiptItemsAsync(ReceiptItem[] receiptItems);
+        Task CreateReceiptItemsAsync(IReceiptItem[] receiptItems);
         
-        Task<Payment> GetPaymentAsync(Guid paymentId);
+        Task<IPayment> GetPaymentAsync(Guid paymentId);
         
-        Task<Payment> GetPaymentByReferenceAsync(string reference);
+        Task<IPayment> GetPaymentByReferenceAsync(string reference);
+
+        Task<IEnumerable<IPayment>> GetPaymentsAsync(Guid? userId = null, DateTime? dateFrom = null, DateTime? dateTo = null);
         
-        Task<IEnumerable<Payment>> GetPaymentsAsync(Guid? userId = null, DateTime? dateFrom = null, DateTime? dateTo = null);
-        
-        Task<IEnumerable<ReceiptItem>> GetReceiptItemsAsync(Guid paymentId);
+        Task<IEnumerable<IReceiptItem>> GetReceiptItemsAsync(Guid paymentId);
         
         Task<bool> PaymentCompletedAsync(Guid paymentId, string reference, EnumPaymentStatus paymentStatus);
         
@@ -26,10 +26,10 @@ namespace LittleLogBook.Data.Contracts
         
         Task<bool> PaymentRedirectedAsync(Guid paymentId, string reference);
         
-        Task<Payment> PaymentRequestedAsync(Guid userId, EnumPaymentGatewayProvider paymentGatewayProvider, string reference,
+        Task<IPayment> PaymentRequestedAsync(Guid userId, EnumPaymentGatewayProvider paymentGatewayProvider, string reference,
             Guid paymentReferenceId, EnumPaymentReferenceType paymentReferenceType, ICurrency currency, double amount,
             string userIpAddress, ICountry userCountry, string userReferer, string userAgent, string userHost);
-        
+
         Task<bool> RefundPaymentAsync(Guid paymentId);
     }
 }

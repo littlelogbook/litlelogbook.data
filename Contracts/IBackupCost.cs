@@ -2,7 +2,7 @@
 
 namespace LittleLogBook.Data.Contracts
 {
-    public interface ICloudBackupCost
+    public interface IBackupCost
     {
         Guid CloudUserId { get; }
         

@@ -12,9 +12,9 @@ namespace LittleLogBook.Data.Managers
     public class StatisticsManager : IStatisticsManager
     {
         private readonly IDataHandler _dataHandler;
-        private readonly ICloudUser _currentUser;
+        private readonly IUser _currentUser;
 
-        public StatisticsManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public StatisticsManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;

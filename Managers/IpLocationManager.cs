@@ -11,9 +11,9 @@ namespace LittleLogBook.Data.Managers
     public class IpLocationManager : IIpLocationManager
     {
         private IDataHandler _dataHandler;
-        private ICloudUser _currentUser;
+        private IUser _currentUser;
 
-        public IpLocationManager(IDataHandler dataHandler, ICloudUser currentUser)
+        public IpLocationManager(IDataHandler dataHandler, IUser currentUser)
         {
             _dataHandler = dataHandler;
             _currentUser = currentUser;
