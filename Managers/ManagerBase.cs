@@ -1,9 +1,13 @@
-﻿using LittleLogBook.Data.Contracts;
+﻿using System;
+
+using LittleLogBook.Data.Contracts;
 
 namespace LittleLogBook.Data.Managers
 {
-    public abstract class ManagerBase
+    public abstract class ManagerBase : IDisposable
     {
+        private bool _isDisposed;
+
         public virtual IUser CurrentUser { get; private set; }
 
         internal ManagerBase(IUser user)
@@ -11,14 +15,24 @@ namespace LittleLogBook.Data.Managers
             CurrentUser = user;
         }
 
-        internal void ClearUser()
+        protected virtual void Dispose(bool disposing)
         {
-            CurrentUser = null;
+            if (!_isDisposed)
+            {
+                if (disposing)
+                {
+                    CurrentUser = null;
+                }
+
+                _isDisposed = true;
+            }
         }
 
-        internal void SetUser(IUser user)
+        public void Dispose()
         {
-            CurrentUser = user;
+            Dispose(disposing: true);
+
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -77,5 +77,16 @@ namespace LittleLogBook.Data.Managers
         {
             return await _receiptManager.GetReceiptItemsAsync(paymentId);
         }
+        
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                (_paymentManager as PaymentManager)?.Dispose();
+                (_receiptManager as ReceiptManager)?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

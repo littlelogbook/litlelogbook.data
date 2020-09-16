@@ -1,43 +1,37 @@
 ﻿using LittleLogBook.Data.Contracts;
 using LittleLogBook.Data.Managers;
 using LittleLogBook.Data.SqlConnectivity;
+
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LittleLogBook.Data.Core
 {
-    public class DataContext : IDataContext
+    public class DataContext : IDataContext, IDisposable
     {
-        private readonly IDataHandler _dataHandler;
-        private IUserManager _userManager;
-        private IUser _user;
+        public IUser CurrentUser { get; private set; }
 
         private IDictionary<Type, ManagerBase> _managers;
-
-        public DataContext(IDataHandler dataHandler)
-            : this(dataHandler, null)
-        {
-
-        }
+        private bool disposedValue;
 
         public DataContext(IDataHandler dataHandler, IUser user)
         {
-            _dataHandler = dataHandler;
-            _user = user;
+            CurrentUser = user;
 
             _managers = new Dictionary<Type, ManagerBase>
             {
-                { typeof(IBasketManager),  new BasketManager(_dataHandler, _user) },
-                { typeof(IInvoiceManager),  new InvoiceManager(_dataHandler, _user) },
-                { typeof(IUserManager),  new UserManager(_dataHandler, ChangeUser) },
-                { typeof(IBackupManager),  new BackupManager(_dataHandler, _user) },
-                { typeof(IStorageProductManager),  new StorageProductManager(_dataHandler, _user) },
-                { typeof(ICountryManager),  new CountryManager(_dataHandler, _user) },
-                { typeof(ICurrencyManager),  new CurrencyManager(_dataHandler, _user) },
-                { typeof(IIpLocationManager),  new IpLocationManager(_dataHandler, _user) },
-                { typeof(IStatisticsManager),  new StatisticsManager(_dataHandler, _user) },
-                { typeof(IUserPurseManager),  new UserPurseManager(_dataHandler, _user) },
-                { typeof(IVerificationCodeManager),  new VerificationCodeManager(_dataHandler, _user) }
+                { typeof(IBasketManager),  new BasketManager(dataHandler, user) },
+                { typeof(IInvoiceManager),  new InvoiceManager(dataHandler, user) },
+                { typeof(IUserManager),  new UserManager(dataHandler, user) },
+                { typeof(IBackupManager),  new BackupManager(dataHandler, user) },
+                { typeof(IStorageProductManager),  new StorageProductManager(dataHandler, user) },
+                { typeof(ICountryManager),  new CountryManager(dataHandler, user) },
+                { typeof(ICurrencyManager),  new CurrencyManager(dataHandler, user) },
+                { typeof(IIpLocationManager),  new IpLocationManager(dataHandler, user) },
+                { typeof(IStatisticsManager),  new StatisticsManager(dataHandler, user) },
+                { typeof(IUserPurseManager),  new UserPurseManager(dataHandler, user) },
+                { typeof(IVerificationCodeManager),  new VerificationCodeManager(dataHandler, user) }
             };
         }
 
@@ -63,12 +57,52 @@ namespace LittleLogBook.Data.Core
 
         public IVerificationCodeManager VerificationCodeManager => (VerificationCodeManager) _managers[typeof(IVerificationCodeManager)];
 
-        private void ChangeUser(IUser user)
+        public static async Task<IDataContext> LogInAsync(string connectionString, string username, string password)
         {
-            foreach(var key in _managers.Keys)
+            var dataHandler = new DataHandler(connectionString);
+            var user = await Managers.UserManager.LogInAsync(dataHandler, username, password);
+            var dataContext = new DataContext(dataHandler, user);
+
+            return dataContext;
+        }
+
+        public void LogOut()
+        {
+            if (_managers != null)
             {
-                _managers[key].SetUser(user);
+                foreach (var key in _managers.Keys)
+                {
+                    var manager = _managers[key];
+
+                    manager.Dispose();
+                }
+
+                _managers.Clear();
+
+                _managers = null;
             }
+
+            CurrentUser = null;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    LogOut();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            
+            GC.SuppressFinalize(this);
         }
     }
 }

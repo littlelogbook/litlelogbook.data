@@ -2,6 +2,10 @@
 {
     public interface IDataContext
     {
+        IUser CurrentUser { get; }
+
+        void LogOut();
+
         IBackupManager BackupManager { get; }
         
         IBasketManager BasketManager { get; }

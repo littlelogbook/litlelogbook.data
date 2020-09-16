@@ -103,5 +103,15 @@ namespace LittleLogBook.Data.Managers
 
             return null;
         }
+        
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _dataHandler?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }

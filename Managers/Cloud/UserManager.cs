@@ -14,13 +14,10 @@ namespace LittleLogBook.Data.Managers
     {
         private readonly IDataHandler _dataHandler;
 
-        private Action<IUser> _onUserChanged;
-
-        internal UserManager(IDataHandler dataHandler, Action<IUser>OnUserChanged)
-            : base(null)
+        internal UserManager(IDataHandler dataHandler, IUser user)
+            : base(user)
         {
             _dataHandler = dataHandler;
-            _onUserChanged = OnUserChanged;
         }
 
         public async Task<IUser> GetUserAsync(string emailAddress)
@@ -49,47 +46,26 @@ namespace LittleLogBook.Data.Managers
 			return null;
 		}
 
-        public void Logout()
+        internal static async Task<IUser> LogInAsync(IDataHandler dataHandler, string username, string password)
         {
-            if (CurrentUser == null)
-            {
-                return;
-            }
-
-            base.ClearUser();
-
-            _onUserChanged?.Invoke(CurrentUser);
-        }
-
-        public async Task<IUser> LoginAsync(string emailAddress, string password)
-        {
-            if (CurrentUser != null)
-            {
-                throw new SecurityException("Previous user still logged in");
-            }
-
-            emailAddress = (emailAddress + "").Trim();
+            username = (username + "").Trim();
             password = (password + "").Trim();
 
-            if (emailAddress.Length == 0 || password.Length == 0)
+            if (username.Length == 0 || password.Length == 0)
             {
-                throw new ArgumentNullException("Email address and password may not be empty");
+                throw new ArgumentNullException("Username and password may not be empty");
             }
 
-            using (var command = _dataHandler.CreateCommand("GetCloudUserByLogin"))
+            using (var command = dataHandler.CreateCommand("GetCloudUserByLogin"))
             {
-                command.AddParameter("@EmailAddress", emailAddress, DbType.String);
+                command.AddParameter("@EmailAddress", username, DbType.String);
                 command.AddParameter("@Password", password, DbType.String);
 
                 using (var reader = command.OpenReader())
                 {
                     if (await reader.ReadAsync())
                     {
-                        base.SetUser(new CloudUser(Constants.SystemUserId, reader));
-
-                        _onUserChanged?.Invoke(CurrentUser);
-
-                        return CurrentUser;
+                        return new CloudUser(Constants.SystemUserId, reader);
                     }
                 }
             }
@@ -328,5 +304,15 @@ namespace LittleLogBook.Data.Managers
                 return true;
             }
 		}
-	}
+        
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _dataHandler?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+    }
 }

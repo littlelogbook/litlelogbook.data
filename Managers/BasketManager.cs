@@ -38,5 +38,15 @@ namespace LittleLogBook.Data.Managers
                 return (await command.ExecuteNonQueryAsync()) > 0;
             }
         }
+        
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _dataHandler?.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
     }
 }
