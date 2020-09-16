@@ -96,7 +96,7 @@ namespace LittleLogBook.Data.Managers
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new Country(Constants.SystemUserId, reader);
+                        return new Country(CurrentUser.CloudUserId, reader);
                     }
                 }
             }

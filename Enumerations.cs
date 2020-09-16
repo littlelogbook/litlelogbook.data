@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace LittleLogBook.Data
+﻿namespace LittleLogBook.Data
 {
-	public enum EnumCloudUserStatus
+    public enum EnumCloudUserStatus
 	{
 		Unknown = 0,
 		Unverified = 1,

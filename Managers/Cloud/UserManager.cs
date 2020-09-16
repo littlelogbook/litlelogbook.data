@@ -32,13 +32,13 @@ namespace LittleLogBook.Data.Managers
             using (var command = _dataHandler.CreateCommand("GetCloudUserByEmailAddress"))
             {
                 command.AddParameter("@EmailAddress", emailAddress, DbType.String);
-                command.AddParameter("@ViewedByUserId", Constants.SystemUserId, DbType.Guid);
+                command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 using (var reader = command.OpenReader())
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new CloudUser(Constants.SystemUserId, reader);
+                        return new CloudUser(CurrentUser.CloudUserId, reader);
                     }
                 }
             }
@@ -65,7 +65,7 @@ namespace LittleLogBook.Data.Managers
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new CloudUser(Constants.SystemUserId, reader);
+                        return new CloudUser(reader);
                     }
                 }
             }
@@ -84,7 +84,7 @@ namespace LittleLogBook.Data.Managers
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new CloudUser(Constants.SystemUserId, reader);
+                        return new CloudUser(CurrentUser.CloudUserId, reader);
                     }
                 }
             }

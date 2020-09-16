@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace LittleLogBook.Data.Core
+namespace LittleLogBook.Data
 {
     public class DataContext : IDataContext, IDisposable
     {

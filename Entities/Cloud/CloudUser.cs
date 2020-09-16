@@ -21,6 +21,11 @@ namespace LittleLogBook.Data.Entities.Cloud
 
 		}
 
+		public CloudUser(SqlDataReader Reader) : this(Reader.GetGuid(Reader.GetOrdinal("CloudUserId")), Reader)
+		{
+
+		}
+
 		public CloudUser(Guid ViewedByUserId, SqlDataReader Reader) : base(ViewedByUserId, Reader)
 		{
 
