@@ -18,7 +18,7 @@
         <Product>Little LogBook</Product>
         <Copyright>Mbeleni Data Solutions 2020</Copyright>
         <Description>This library contains data entities and their managers for the Little LogBook Global database</Description>
-        <Version>1.0.6.0</Version>
+        <Version>1.0.7.0</Version>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />

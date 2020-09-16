@@ -44,6 +44,11 @@ namespace LittleLogBook.Data.Entities.Base
 			{
 				return _createdByUserId;
 			}
+            protected set
+            {
+				_createdByUserId = value;
+
+			}
 		}
 
 		public DateTime DateCreated
