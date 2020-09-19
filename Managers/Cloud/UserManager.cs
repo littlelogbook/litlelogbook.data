@@ -114,7 +114,7 @@ namespace LittleLogBook.Data.Managers
             return returnValues;
         }
 
-        public async Task<bool> IsEmailAddressAvailableAsync(string emailAddress)
+        internal static async Task<bool> IsEmailAddressAvailableAsync(IDataHandler dataHandler, string emailAddress)
 		{
 			emailAddress = (emailAddress + "").Trim();
 
@@ -123,7 +123,7 @@ namespace LittleLogBook.Data.Managers
 				throw new ArgumentNullException("The specified email address may not be empty");
 			}
 
-            using (var command = _dataHandler.CreateCommand("IsCloudEmailAddressAvailable"))
+            using (var command = dataHandler.CreateCommand("IsCloudEmailAddressAvailable"))
             {
                 command.AddParameter("@EmailAddress", emailAddress, DbType.String);
 

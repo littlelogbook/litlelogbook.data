@@ -66,6 +66,13 @@ namespace LittleLogBook.Data
             return dataContext;
         }
 
+        public static async Task<bool> IsEmailAddressAvailableAsync(string connectionString, string emailAddress)
+        {
+            var dataHandler = new DataHandler(connectionString);
+            
+            return await Managers.UserManager.IsEmailAddressAvailableAsync(dataHandler, emailAddress);
+        }
+
         public void LogOut()
         {
             if (_managers != null)

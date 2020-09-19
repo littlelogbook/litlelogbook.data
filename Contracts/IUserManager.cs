@@ -14,8 +14,6 @@ namespace LittleLogBook.Data.Contracts
 
         Task<IEnumerable<IUserAudit>> GetUserAuditsAsync(Guid cloudUserId, DateTime? dateFrom = null, DateTime? dateTo = null);
 
-        Task<bool> IsEmailAddressAvailableAsync(string emailAddress);
-
         Task<bool> UpdateUserAsync(IUser user);
 
         Task<bool> RegisterUserAsync(IUser user, string password);
