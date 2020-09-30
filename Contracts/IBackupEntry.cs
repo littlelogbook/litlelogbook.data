@@ -19,9 +19,11 @@ namespace LittleLogBook.Data.Contracts
         string BackupName { get; set; }
         
         DateTime? BackupStartDateTime { get; }
-        
+
         long BytesTransferred { get; set; }
         
+        string ExtraInformation { get; set; }
+
         Guid CloudUserId { get; }
         
         long PlannedBackupSize { get; set; }

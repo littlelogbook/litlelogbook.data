@@ -17,6 +17,7 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
         private DateTime? _backupEndDateTime = null;
         private long _plannedBackupSize = 0;
         private long _bytesTransferred = 0;
+        private string _extraInformation = null;
 
         public Guid BackupEntryId
         {
@@ -160,6 +161,24 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
             }
         }
 
+
+        public string ExtraInformation
+        {
+            get
+            {
+                return _extraInformation;
+            }
+            set
+            {
+                if (_extraInformation != value)
+                {
+                    _extraInformation = value;
+
+                    base.IsDirty = true;
+                }
+            }
+        }
+
         public BaseBackupEntry(Guid CreatedByUserId, Guid CloudUserId, EnumBackupEntryType BackupEntryType, string BackupFilename) : base(CreatedByUserId)
         {
             _cloudUserId = CloudUserId;
@@ -179,9 +198,7 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
 
         public BaseBackupEntry(Guid ViewedByUserId, SqlDataReader Reader) : base(ViewedByUserId, Reader)
         {
-            string fieldname = null;
-
-            fieldname = "BackupEntryId";
+            string fieldname = "BackupEntryId";
             _backupEntryId = Reader.GetGuid(Reader.GetOrdinal(fieldname));
 
             fieldname = "CloudUserId";
@@ -224,6 +241,12 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
             if (!Reader.IsDBNull(Reader.GetOrdinal(fieldname)))
             {
                 _bytesTransferred = Reader.GetInt64(Reader.GetOrdinal(fieldname));
+            }
+
+            fieldname = "ExtraInformation";
+            if (!Reader.IsDBNull(Reader.GetOrdinal(fieldname)))
+            {
+                _extraInformation = Reader.GetString(Reader.GetOrdinal(fieldname));
             }
         }
     }

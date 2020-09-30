@@ -114,7 +114,7 @@ namespace LittleLogBook.Data.Managers
             return false;
         }
 
-        public async Task<bool> FinishBackupEntryAsync(Guid backupEntryId, EnumBackupEntryStatus backupEntryStatus, long bytesTransferred)
+        public async Task<bool> FinishBackupEntryAsync(Guid backupEntryId, EnumBackupEntryStatus backupEntryStatus, long bytesTransferred, string extraInformation)
         {
             using (var command = _dataHandler.CreateCommand("FinishBackupEntry"))
             {
@@ -122,6 +122,7 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@BytesTransferred", bytesTransferred, DbType.Int64);
                 command.AddParameter("@BackupEntryStatusId", backupEntryStatus, DbType.Int64);
                 command.AddParameter("@ModifiedByUserId", CurrentUser.CloudUserId, DbType.Guid);
+                command.AddParameter("@ExtraInformation", extraInformation, DbType.String);
 
                 return await command.ExecuteNonQueryAsync() > 0;
             }

@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using LittleLogBook.Data.Entities.Cloud;
-
 namespace LittleLogBook.Data.Contracts
 {
     public interface IBackupManager
     {
-        Task<bool> FinishBackupEntryAsync(Guid backupEntryId, EnumBackupEntryStatus backupEntryStatus, long bytesTransferred);
+        Task<bool> FinishBackupEntryAsync(Guid backupEntryId, EnumBackupEntryStatus backupEntryStatus, long bytesTransferred, string extraInformation);
         
         Task<IBackupCost> GetBackupCostAsync(Guid cloudUserId, long dataLength);
         
