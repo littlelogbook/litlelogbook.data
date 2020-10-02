@@ -137,6 +137,11 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@BackupEntryTypeId", (int) backupEntry.BackupEntryType, DbType.Int32);
                 command.AddParameter("@BackupFilename", backupEntry.BackupFilename, DbType.String);
                 command.AddParameter("@PlannedBackupSize", backupEntry.PlannedBackupSize, DbType.Int64);
+                command.AddParameter("@DeviceSerialNumber", backupEntry.DeviceSerialNumber, DbType.String);
+                command.AddParameter("@RegistrationNumber", backupEntry.RegistrationNumber, DbType.String);
+                command.AddParameter("@TimeZone", backupEntry.TimeZone, DbType.String);
+                command.AddParameter("@VehicleMake", backupEntry.VehicleMake, DbType.String);
+                command.AddParameter("@VehicleYear", backupEntry.VehicleYear, DbType.Int32);
                 command.AddParameter("@CreatedByUserId", CurrentUser.CloudUserId, DbType.Guid);
 
                 if (await command.ExecuteNonQueryAsync() > 0)

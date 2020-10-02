@@ -27,7 +27,17 @@ namespace LittleLogBook.Data.Contracts
         Guid CloudUserId { get; }
         
         long PlannedBackupSize { get; set; }
-        
+
+        string DeviceSerialNumber { get; set; }
+
+        string RegistrationNumber { get; set; }
+
+        string TimeZone { get; set; }
+
+        string VehicleMake { get; set; }
+
+        int VehicleYear { get; set; }
+
         double BytesTransferredSizeInMegaBytes { get; }
         
         string BytesTransferredSizeText { get; }
