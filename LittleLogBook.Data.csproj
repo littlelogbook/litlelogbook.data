@@ -18,8 +18,8 @@
         <Product>Little LogBook</Product>
         <Copyright>Mbeleni Data Solutions 2020</Copyright>
         <Description>This library contains data entities and their managers for the Little LogBook Global database</Description>
-        <Version>1.0.9.0</Version>
-        <AssemblyVersion>1.0.9.0</AssemblyVersion>
+        <Version>1.0.10.0</Version>
+        <AssemblyVersion>1.0.10.0</AssemblyVersion>
         <Company>Little LogBook</Company>
     </PropertyGroup>
     <ItemGroup>

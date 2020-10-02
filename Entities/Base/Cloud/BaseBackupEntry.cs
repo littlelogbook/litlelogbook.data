@@ -17,6 +17,11 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
         private DateTime? _backupEndDateTime = null;
         private long _plannedBackupSize = 0;
         private long _bytesTransferred = 0;
+        private string _deviceSerialNumber = null;
+        private string _registrationNumber = null;
+        private string _timeZone = null;
+        private string _vehicleMake = null;
+        private int _vehicleYear = 0;
         private string _extraInformation = null;
 
         public Guid BackupEntryId
@@ -161,6 +166,90 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
             }
         }
 
+        public string DeviceSerialNumber
+        {
+            get
+            {
+                return _deviceSerialNumber;
+            }
+            set
+            {
+                if (_deviceSerialNumber != value)
+                {
+                    _deviceSerialNumber = value;
+
+                    base.IsDirty = true;
+                }
+            }
+        }
+
+        public string RegistrationNumber
+        {
+            get
+            {
+                return _registrationNumber;
+            }
+            set
+            {
+                if (_registrationNumber != value)
+                {
+                    _registrationNumber = value;
+
+                    base.IsDirty = true;
+                }
+            }
+        }
+
+        public string TimeZone
+        {
+            get
+            {
+                return _timeZone;
+            }
+            set
+            {
+                if (_timeZone != value)
+                {
+                    _timeZone = value;
+
+                    base.IsDirty = true;
+                }
+            }
+        }
+
+        public string VehicleMake
+        {
+            get
+            {
+                return _vehicleMake;
+            }
+            set
+            {
+                if (_vehicleMake != value)
+                {
+                    _vehicleMake = value;
+
+                    base.IsDirty = true;
+                }
+            }
+        }
+
+        public int VehicleYear
+        {
+            get
+            {
+                return _vehicleYear;
+            }
+            set
+            {
+                if (_vehicleYear != value)
+                {
+                    _vehicleYear = value;
+
+                    base.IsDirty = true;
+                }
+            }
+        }
 
         public string ExtraInformation
         {
@@ -242,6 +331,21 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
             {
                 _bytesTransferred = Reader.GetInt64(Reader.GetOrdinal(fieldname));
             }
+
+            fieldname = "DeviceSerialNumber";
+            _deviceSerialNumber = Reader.GetString(Reader.GetOrdinal(fieldname));
+
+            fieldname = "RegistrationNumber";
+            _registrationNumber = Reader.GetString(Reader.GetOrdinal(fieldname));
+
+            fieldname = "TimeZone";
+            _timeZone = Reader.GetString(Reader.GetOrdinal(fieldname));
+
+            fieldname = "VehicleMake";
+            _vehicleMake = Reader.GetString(Reader.GetOrdinal(fieldname));
+
+            fieldname = "VehicleYear";
+            _vehicleYear = Reader.GetInt32(Reader.GetOrdinal(fieldname));
 
             fieldname = "ExtraInformation";
             if (!Reader.IsDBNull(Reader.GetOrdinal(fieldname)))
