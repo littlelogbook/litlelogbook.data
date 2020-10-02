@@ -19,7 +19,7 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
         private long _bytesTransferred = 0;
         private string _deviceSerialNumber = null;
         private string _registrationNumber = null;
-        private string _timeZone = null;
+        private string _timeZoneId = null;
         private string _vehicleMake = null;
         private int _vehicleYear = 0;
         private string _extraInformation = null;
@@ -200,17 +200,17 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
             }
         }
 
-        public string TimeZone
+        public string TimeZoneId
         {
             get
             {
-                return _timeZone;
+                return _timeZoneId;
             }
             set
             {
-                if (_timeZone != value)
+                if (_timeZoneId != value)
                 {
-                    _timeZone = value;
+                    _timeZoneId = value;
 
                     base.IsDirty = true;
                 }
@@ -338,8 +338,8 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
             fieldname = "RegistrationNumber";
             _registrationNumber = Reader.GetString(Reader.GetOrdinal(fieldname));
 
-            fieldname = "TimeZone";
-            _timeZone = Reader.GetString(Reader.GetOrdinal(fieldname));
+            fieldname = "TimeZoneId";
+            _timeZoneId = Reader.GetString(Reader.GetOrdinal(fieldname));
 
             fieldname = "VehicleMake";
             _vehicleMake = Reader.GetString(Reader.GetOrdinal(fieldname));

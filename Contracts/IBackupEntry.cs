@@ -32,7 +32,7 @@ namespace LittleLogBook.Data.Contracts
 
         string RegistrationNumber { get; set; }
 
-        string TimeZone { get; set; }
+        string TimeZoneId { get; set; }
 
         string VehicleMake { get; set; }
 
