@@ -92,6 +92,11 @@ namespace LittleLogBook.Data.Managers
             return null;
         }
 
+        public async Task<bool> IsEmailAddressAvailableAsync(string emailAddress)
+        {
+            return await IsEmailAddressAvailableAsync(_dataHandler, emailAddress);
+        }
+
         public async Task<IEnumerable<IUserAudit>> GetUserAuditsAsync(Guid cloudUserId, DateTime? dateFrom = null, DateTime? dateTo = null)
         {
             var returnValues = new List<IUserAudit>();
