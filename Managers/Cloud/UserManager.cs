@@ -288,21 +288,19 @@ namespace LittleLogBook.Data.Managers
             {
                 command.AddParameter("@CloudUserId", user.CloudUserId, DbType.Guid);
                 command.AddParameter("@EmailAddress", emailAddress, DbType.String);
-                command.AddParameter("@CloudUserStatus", EnumCloudUserStatus.Unverified, DbType.String);
+                command.AddParameter("@CloudUserStatus", EnumCloudUserStatus.Unverified, DbType.Int32);
                 command.AddParameter("@DateModified", DateTime.UtcNow, DbType.DateTime);
                 command.AddParameter("@ModifiedByUserId", user.ViewedByUserId, DbType.Guid);
 
                 if ((await command.ExecuteNonQueryAsync()) > 0)
                 {
                     user.EmailAddress = emailAddress;
+
                     ((CloudUser)user).SetInternals(false, false, DateTime.UtcNow, user.ViewedByUserId);
 
                     if (user.EmailAddress.Equals(emailAddress, StringComparison.InvariantCultureIgnoreCase))
                     {
                         user.CloudUserStatus = EnumCloudUserStatus.Unverified;
-
-                        //var verificationCode = VerificationCodeManager.GenerateVerificationCode(Constants.SystemUserId, user.EmailAddress, EnumVerificationType.ForgotPassword, EnumVerificationCodeType.Complex, Constants.SystemConnectionId);
-                        //SmtpManager.SendCloudUserEmailVerification(user, verificationCode);
                     }
                 }
 
