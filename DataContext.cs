@@ -5,6 +5,7 @@ using LittleLogBook.Data.SqlConnectivity;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using LittleLogBook.Data.Managers.Cloud;
 
 namespace LittleLogBook.Data
 {
@@ -60,7 +61,7 @@ namespace LittleLogBook.Data
         public static async Task<IDataContext> LogInAsync(string connectionString, string username, string password)
         {
             var dataHandler = new DataHandler(connectionString);
-            var user = await Managers.UserManager.LogInAsync(dataHandler, username, password);
+            var user = await Managers.Cloud.UserManager.LogInAsync(dataHandler, username, password);
             var dataContext = new DataContext(dataHandler, user);
 
             return dataContext;
@@ -70,7 +71,14 @@ namespace LittleLogBook.Data
         {
             var dataHandler = new DataHandler(connectionString);
             
-            return await Managers.UserManager.IsEmailAddressAvailableAsync(dataHandler, emailAddress);
+            return await Managers.Cloud.UserManager.IsEmailAddressAvailableAsync(dataHandler, emailAddress);
+        }
+
+        public static async Task<bool> IsMemorableWordAvailableAsync(string connectionString, string memorableWord)
+        {
+            var dataHandler = new DataHandler(connectionString);
+            
+            return await Managers.Cloud.UserManager.IsEmailAddressAvailableAsync(dataHandler, memorableWord);
         }
 
         public void LogOut()

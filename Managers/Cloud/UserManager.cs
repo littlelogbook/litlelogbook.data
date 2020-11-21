@@ -8,7 +8,7 @@ using LittleLogBook.Data.Contracts;
 using LittleLogBook.Data.Entities.Cloud;
 using LittleLogBook.Data.SqlConnectivity;
 
-namespace LittleLogBook.Data.Managers
+namespace LittleLogBook.Data.Managers.Cloud
 {
     public class UserManager : ManagerBase, IUserManager
     {
@@ -46,6 +46,34 @@ namespace LittleLogBook.Data.Managers
 			return null;
 		}
 
+        public async Task<IEnumerable<IUser>> GetUsersByMemorableWordAsync(string memorableWord)
+        {
+	        memorableWord = (memorableWord + "").Trim();
+
+	        if (memorableWord.Length == 0)
+	        {
+		        throw new ArgumentNullException("The specified memorable word may not be empty");
+	        }
+
+	        using (var command = _dataHandler.CreateCommand("GetCloudUsersByMemorableWord"))
+	        {
+		        command.AddParameter("@MemorableWord", memorableWord, DbType.String);
+		        command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
+
+		        var users = new List<IUser>();
+		        
+		        using (var reader = command.OpenReader())
+		        {
+			        while (await reader.ReadAsync())
+			        {
+				        users.Add(new CloudUser(CurrentUser.CloudUserId, reader));
+			        }
+		        }
+
+		        return users;
+	        }
+        }
+        
         internal static async Task<IUser> LogInAsync(IDataHandler dataHandler, string username, string password)
         {
             username = (username + "").Trim();
@@ -94,7 +122,12 @@ namespace LittleLogBook.Data.Managers
 
         public async Task<bool> IsEmailAddressAvailableAsync(string emailAddress)
         {
-            return await IsEmailAddressAvailableAsync(_dataHandler, emailAddress);
+	        return await IsEmailAddressAvailableAsync(_dataHandler, emailAddress);
+        }
+
+        public async Task<bool> IsMemorableWordAvailableAsync(string memorableWord)
+        {
+	        return await IsMemorableWordAvailableAsync(_dataHandler, memorableWord);
         }
 
         public async Task<IEnumerable<IUserAudit>> GetUserAuditsAsync(Guid cloudUserId, DateTime? dateFrom = null, DateTime? dateTo = null)
@@ -138,6 +171,25 @@ namespace LittleLogBook.Data.Managers
             }
 		}
 
+        internal static async Task<bool> IsMemorableWordAvailableAsync(IDataHandler dataHandler, string memorableWord)
+        {
+	        memorableWord = (memorableWord + "").Trim();
+
+	        if (memorableWord.Length == 0)
+	        {
+		        throw new ArgumentNullException("The specified memorable word may not be empty");
+	        }
+
+	        using (var command = dataHandler.CreateCommand("IsCloudMemorableWordAvailable"))
+	        {
+		        command.AddParameter("@MemorableWord", memorableWord, DbType.String);
+
+		        var result = (await command.ExecuteScalarAsync()) + "";
+
+		        return "1".Equals(result) || "True".Equals(result, StringComparison.OrdinalIgnoreCase);
+	        }
+        }
+
 		public async Task<bool> UpdateUserAsync(IUser user)
 		{
             using (var command = _dataHandler.CreateCommand("UpdateCloudUser"))
@@ -148,6 +200,14 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@TitleId", (int)user.Title, DbType.Int32);
                 command.AddParameter("@ContactNumber", user.ContactNumber, DbType.String);
                 command.AddParameter("@PreferredCurrencyIso", user.PreferredCurrencyIso, DbType.String);
+                command.AddParameter("@TimezoneId", user.TimezoneId, DbType.String);
+                command.AddParameter("@MemorableWord", user.MemorableWord, DbType.String);
+                command.AddParameter("@SecurityQuestion1", user.SecurityQuestion1, DbType.String);
+                command.AddParameter("@SecurityAnswer1", user.SecurityAnswer1, DbType.String);
+                command.AddParameter("@SecurityQuestion2", user.SecurityQuestion2, DbType.String);
+                command.AddParameter("@SecurityAnswer2", user.SecurityAnswer2, DbType.String);
+                command.AddParameter("@SecurityQuestion3", user.SecurityQuestion3, DbType.String);
+                command.AddParameter("@SecurityAnswer3", user.SecurityAnswer3, DbType.String);
                 command.AddParameter("@ModifiedByUserId", user.ViewedByUserId, DbType.Guid);
 
                 if ((await command.ExecuteNonQueryAsync()) > 0)
@@ -184,8 +244,16 @@ namespace LittleLogBook.Data.Managers
                 command.AddParameter("@FirstName", user.FirstName, DbType.String);
                 command.AddParameter("@LastName", user.LastName, DbType.String);
                 command.AddParameter("@TitleId", (int)user.Title, DbType.String);
-                command.AddParameter("@PreferredCurrencyIso", user.PreferredCurrencyIso, DbType.String);
                 command.AddParameter("@ContactNumber", user.ContactNumber, DbType.String);
+                command.AddParameter("@PreferredCurrencyIso", user.PreferredCurrencyIso, DbType.String);
+                command.AddParameter("@TimezoneId", user.TimezoneId, DbType.String);
+                command.AddParameter("@MemorableWord", user.MemorableWord, DbType.String);
+                command.AddParameter("@SecurityQuestion1", user.SecurityQuestion1, DbType.String);
+                command.AddParameter("@SecurityAnswer1", user.SecurityAnswer1, DbType.String);
+                command.AddParameter("@SecurityQuestion2", user.SecurityQuestion2, DbType.String);
+                command.AddParameter("@SecurityAnswer2", user.SecurityAnswer2, DbType.String);
+                command.AddParameter("@SecurityQuestion3", user.SecurityQuestion3, DbType.String);
+                command.AddParameter("@SecurityAnswer3", user.SecurityAnswer3, DbType.String);
 
                 if ((await command.ExecuteNonQueryAsync()) > 0)
                 {
@@ -295,13 +363,9 @@ namespace LittleLogBook.Data.Managers
                 if ((await command.ExecuteNonQueryAsync()) > 0)
                 {
                     user.EmailAddress = emailAddress;
+                    user.CloudUserStatus = EnumCloudUserStatus.Unverified;
 
                     ((CloudUser)user).SetInternals(false, false, DateTime.UtcNow, user.ViewedByUserId);
-
-                    if (user.EmailAddress.Equals(emailAddress, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        user.CloudUserStatus = EnumCloudUserStatus.Unverified;
-                    }
                 }
 
                 return true;

@@ -20,12 +20,26 @@ namespace LittleLogBook.Data.Contracts
 
 		EnumCloudUserStatus CloudUserStatus { get; set; }
 
+		string TimezoneId { get; set; }
+		
+		string MemorableWord { get; set; }
+		
+		string SecurityQuestion1 { get; set; }
+		
+		string SecurityAnswer1 { get; set; }
+		
+		string SecurityQuestion2 { get; set; }
+		
+		string SecurityAnswer2 { get; set; }
+		
+		string SecurityQuestion3 { get; set; }
+		
+		string SecurityAnswer3 { get; set; }
+		
 		string EmailAddressUrlEncoded { get; }
 
         Guid? ViewedByUserId { get; }
 
         Guid CreatedByUserId { get; }
-
-        string ToString();
 	}
 }

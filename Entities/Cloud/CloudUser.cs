@@ -8,13 +8,7 @@ namespace LittleLogBook.Data.Entities.Cloud
 {
     public class CloudUser : BaseCloudUser, IUser
 	{
-		public string EmailAddressUrlEncoded
-		{
-			get
-			{
-				return Uri.EscapeDataString(base.EmailAddress);
-			}
-		}
+		public string EmailAddressUrlEncoded => Uri.EscapeDataString(EmailAddress);
 
 		public CloudUser(Guid CreatedByUserId) : base(CreatedByUserId)
 		{
@@ -23,7 +17,7 @@ namespace LittleLogBook.Data.Entities.Cloud
 
 		public CloudUser() : base(Guid.Empty)
 		{
-			base.CreatedByUserId = CloudUserId;
+			CreatedByUserId = CloudUserId;
 		}
 
 		public CloudUser(SqlDataReader Reader) : this(Reader.GetGuid(Reader.GetOrdinal("CloudUserId")), Reader)
@@ -36,16 +30,18 @@ namespace LittleLogBook.Data.Entities.Cloud
 
 		}
 
-		public CloudUser(Guid CreatedByUserId, EnumTitle Title, string FirstName, string LastName,
-			string EmailAddress, EnumCloudUserStatus CloudUserStatus, string PreferredCurrencyIso)
-			: base(CreatedByUserId, Title, FirstName, LastName, EmailAddress, CloudUserStatus, PreferredCurrencyIso)
+		public CloudUser(Guid CreatedByUserId, EnumTitle Title, string FirstName, string LastName, string EmailAddress, EnumCloudUserStatus CloudUserStatus,
+			string PreferredCurrencyIso, string PreferredTimeZoneId, string MemorableWord, string SecurityQuestion1, string SecurityAnswer1,
+			string SecurityQuestion2, string SecurityAnswer2, string SecurityQuestion3,string SecurityAnswer3)
+			: base(CreatedByUserId, Title, FirstName, LastName, EmailAddress, CloudUserStatus, PreferredCurrencyIso, PreferredTimeZoneId,
+				MemorableWord, SecurityQuestion1, SecurityAnswer1, SecurityQuestion2, SecurityAnswer2, SecurityQuestion3, SecurityAnswer3)
 		{
 
 		}
 
         public override string ToString()
         {
-            string returnValue = ((base.Title + " " + base.FirstName).Trim() + " " + base.LastName).Trim();
+            var returnValue = ((Title + " " + FirstName).Trim() + " " + LastName).Trim();
 
             return returnValue;
         }

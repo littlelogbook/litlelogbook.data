@@ -12,7 +12,11 @@ namespace LittleLogBook.Data.Contracts
 
         Task<IUser> GetUserAsync(string emailAddress);
 
+        Task<IEnumerable<IUser>> GetUsersByMemorableWordAsync(string memorableWord);
+        
         Task<bool> IsEmailAddressAvailableAsync(string emailAddress);
+        
+        Task<bool> IsMemorableWordAvailableAsync(string memorableWord);
 
         Task<IEnumerable<IUserAudit>> GetUserAuditsAsync(Guid cloudUserId, DateTime? dateFrom = null, DateTime? dateTo = null);
 
