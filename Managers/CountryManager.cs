@@ -64,26 +64,39 @@ namespace LittleLogBook.Data.Managers
             return returnValues;
         }
 
+        public static async Task<ICountry> GetCountryByIso3Async(string connectionString, string countryIso3)
+        {
+            using (var dataHandler = new DataHandler(connectionString))
+            {
+                return await GetCountryByIso3Async(dataHandler, countryIso3, null);
+            }
+        }
+        
         public async Task<ICountry> GetCountryByIso3Async(string countryIso3)
         {
-            using (var command = _dataHandler.CreateCommand("GetCountryByIso3"))
+            return await GetCountryByIso3Async(_dataHandler, countryIso3, CurrentUser);
+        }
+
+        private static async Task<ICountry> GetCountryByIso3Async(IDataHandler dataHandler, string countryIso3, IUser currentUser)
+        {
+            using (var command = dataHandler.CreateCommand("GetCountryByIso3"))
             {
                 command
-                    .AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid)
+                    .AddParameter("@ViewedByUserId", currentUser?.CloudUserId ?? DataContext.SystemId, DbType.Guid)
                     .AddParameter("@CountryIso3", countryIso3, DbType.String);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
                     if (await reader.ReadAsync())
                     {
-                        return new Country(CurrentUser.CloudUserId, reader);
+                        return new Country(currentUser.CloudUserId, reader);
                     }
                 }
             }
 
             return null;
         }
-
+        
         public async Task<ICountry> GetCountryAsync(int countryId)
         {
             using (var command = _dataHandler.CreateCommand("GetCountry"))

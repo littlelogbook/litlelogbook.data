@@ -11,6 +11,8 @@ namespace LittleLogBook.Data
 {
     public class DataContext : IDataContext, IDisposable
     {
+        internal static Guid SystemId => new Guid("77777777-7777-7777-7777-7777-777777777777");
+        
         public IUser CurrentUser { get; private set; }
 
         private IDictionary<Type, ManagerBase> _managers;
