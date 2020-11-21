@@ -152,7 +152,15 @@ namespace LittleLogBook.Data.Managers.Cloud
             return returnValues;
         }
 
-        internal static async Task<bool> IsEmailAddressAvailableAsync(IDataHandler dataHandler, string emailAddress)
+        public static async Task<bool> IsEmailAddressAvailableAsync(string connectionString, string emailAddress)
+        {
+	        using (var dataHandler = new DataHandler(connectionString))
+	        {
+		        return await IsEmailAddressAvailableAsync(dataHandler, emailAddress);
+	        }
+        }
+
+        private static async Task<bool> IsEmailAddressAvailableAsync(IDataHandler dataHandler, string emailAddress)
 		{
 			emailAddress = (emailAddress + "").Trim();
 
@@ -171,7 +179,15 @@ namespace LittleLogBook.Data.Managers.Cloud
             }
 		}
 
-        internal static async Task<bool> IsMemorableWordAvailableAsync(IDataHandler dataHandler, string memorableWord)
+        public static async Task<bool> IsMemorableWordAvailableAsync(string connectionString, string memorableWord)
+        {
+	        using (var dataHandler = new DataHandler(connectionString))
+	        {
+		        return await IsMemorableWordAvailableAsync(dataHandler, memorableWord);
+	        }
+        }
+        
+        private static async Task<bool> IsMemorableWordAvailableAsync(IDataHandler dataHandler, string memorableWord)
         {
 	        memorableWord = (memorableWord + "").Trim();
 

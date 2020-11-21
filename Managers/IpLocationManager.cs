@@ -59,12 +59,28 @@ namespace LittleLogBook.Data.Managers
 
         public async Task<IpLocation> GetIpLocationAsync(string dottedIpAddress)
         {
-            if (dottedIpAddress == null || IsPrivateAddress(dottedIpAddress) || !IsIpv4Address(dottedIpAddress)) return null;
+            return await GetIpLocationAsync(_dataHandler, dottedIpAddress);
+        }
+
+        public static async Task<IpLocation> GetIpLocationAsync(string connectionString, string dottedIpAddress)
+        {
+            using (var dataHandler = new DataHandler(connectionString))
+            {
+                return await GetIpLocationAsync(dataHandler, dottedIpAddress);
+            }
+        }
+        
+        private static async Task<IpLocation> GetIpLocationAsync(IDataHandler dataHandler, string dottedIpAddress)
+        {
+            if (dottedIpAddress == null
+                || IsLocalhost(dottedIpAddress)
+                || IsPrivateAddress(dottedIpAddress)
+                || !IsIpv4Address(dottedIpAddress)) return null;
 
             var segments = dottedIpAddress.Split('.');
             var ipAddressValue = 16777216 * double.Parse(segments[0]) + 65536 * double.Parse(segments[1]) + 256 * double.Parse(segments[2]) + double.Parse(segments[3]);
 
-            using (var command = _dataHandler.CreateCommand("GetIpLocation"))
+            using (var command = dataHandler.CreateCommand("GetIpLocation"))
             {
                 command.AddParameter("@IpAddress", ipAddressValue, DbType.Int64);
 
