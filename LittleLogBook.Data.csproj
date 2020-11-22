@@ -5,7 +5,7 @@
         <RuntimeIdentifiers>win7-x64</RuntimeIdentifiers>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-        <PackageVersion>1.0.17.0</PackageVersion>
+        <PackageVersion>1.0.18.0</PackageVersion>
     </PropertyGroup>
     <PropertyGroup>
         <Version Condition=" '$(BUILD_BUILDNUMBER)' != '' ">$(BUILD_BUILDNUMBER)</Version>
@@ -19,8 +19,8 @@
         <Product>Little LogBook</Product>
         <Copyright>Mbeleni Data Solutions 2020</Copyright>
         <Description>This library contains data entities and their managers for the Little LogBook Global database</Description>
-        <Version>1.0.14.0</Version>
-        <AssemblyVersion>1.0.17.0</AssemblyVersion>
+        <Version>1.0.18.0</Version>
+        <AssemblyVersion>1.0.18.0</AssemblyVersion>
         <Company>Little LogBook</Company>
     </PropertyGroup>
     <ItemGroup>

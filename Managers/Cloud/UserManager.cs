@@ -48,6 +48,19 @@ namespace LittleLogBook.Data.Managers.Cloud
 
         public async Task<IEnumerable<IUser>> GetUsersByMemorableWordAsync(string memorableWord)
         {
+            return await GetUsersByMemorableWordAsync(_dataHandler, memorableWord, CurrentUser.CloudUserId);
+        }
+
+        public static async Task<IEnumerable<IUser>> GetUsersByMemorableWordAsync(string connectionString, string memorableWord, Guid cloudUserId)
+        {
+            using (var dataHandler = new DataHandler(connectionString))
+            {
+                return await GetUsersByMemorableWordAsync(dataHandler, memorableWord, cloudUserId);
+            }
+        }
+
+        private static async Task<IEnumerable<IUser>> GetUsersByMemorableWordAsync(IDataHandler dataHandler, string memorableWord, Guid cloudUserId)
+        {
 	        memorableWord = (memorableWord + "").Trim();
 
 	        if (memorableWord.Length == 0)
@@ -55,10 +68,10 @@ namespace LittleLogBook.Data.Managers.Cloud
 		        throw new ArgumentNullException("The specified memorable word may not be empty");
 	        }
 
-	        using (var command = _dataHandler.CreateCommand("GetCloudUsersByMemorableWord"))
+	        using (var command = dataHandler.CreateCommand("GetCloudUsersByMemorableWord"))
 	        {
 		        command.AddParameter("@MemorableWord", memorableWord, DbType.String);
-		        command.AddParameter("@ViewedByUserId", CurrentUser.CloudUserId, DbType.Guid);
+		        command.AddParameter("@ViewedByUserId", cloudUserId, DbType.Guid);
 
 		        var users = new List<IUser>();
 		        
@@ -66,14 +79,14 @@ namespace LittleLogBook.Data.Managers.Cloud
 		        {
 			        while (await reader.ReadAsync())
 			        {
-				        users.Add(new CloudUser(CurrentUser.CloudUserId, reader));
+				        users.Add(new CloudUser(cloudUserId, reader));
 			        }
 		        }
 
 		        return users;
 	        }
         }
-        
+
         internal static async Task<IUser> LogInAsync(IDataHandler dataHandler, string username, string password)
         {
             username = (username + "").Trim();
