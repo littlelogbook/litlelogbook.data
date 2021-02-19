@@ -16,7 +16,8 @@ namespace LittleLogBook.Data.Entities
 			}
 		}
 
-		public Currency(Guid CreatedByUserId, string CurrencyId, string CurrencySymbol, string CurrencyName, bool IsActive) : base(CreatedByUserId, CurrencyId, CurrencySymbol, CurrencyName, IsActive)
+		public Currency(Guid CreatedByUserId, string CurrencyId, string CurrencySymbol, string CurrencyName, bool IsActive)
+			: base(CreatedByUserId, CurrencyId, CurrencySymbol, CurrencyName, IsActive)
 		{
 
 		}

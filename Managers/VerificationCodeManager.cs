@@ -43,7 +43,7 @@ namespace LittleLogBook.Data.Managers
                     break;
                 case EnumVerificationType.Unknown:
                 default:
-                    throw new ArgumentException("Invalid or unknown verficiation type was specified");
+                    throw new ArgumentException("Invalid or unknown verification type was specified");
             }
 
             var returnValue = new VerificationCode(CurrentUser.CloudUserId, mnemonicToken,

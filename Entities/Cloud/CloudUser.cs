@@ -31,9 +31,9 @@ namespace LittleLogBook.Data.Entities.Cloud
 		}
 
 		public CloudUser(Guid CreatedByUserId, EnumTitle Title, string FirstName, string LastName, string EmailAddress, EnumCloudUserStatus CloudUserStatus,
-			string PreferredCurrencyIso, string PreferredTimeZoneId, string MemorableWord, string SecurityQuestion1, string SecurityAnswer1,
+			EnumCloudUserRole CloudUserRole, string PreferredCurrencyIso, string PreferredTimeZoneId, string MemorableWord, string SecurityQuestion1, string SecurityAnswer1,
 			string SecurityQuestion2, string SecurityAnswer2, string SecurityQuestion3,string SecurityAnswer3)
-			: base(CreatedByUserId, Title, FirstName, LastName, EmailAddress, CloudUserStatus, PreferredCurrencyIso, PreferredTimeZoneId,
+			: base(CreatedByUserId, Title, FirstName, LastName, EmailAddress, CloudUserStatus, CloudUserRole, PreferredCurrencyIso, PreferredTimeZoneId,
 				MemorableWord, SecurityQuestion1, SecurityAnswer1, SecurityQuestion2, SecurityAnswer2, SecurityQuestion3, SecurityAnswer3)
 		{
 

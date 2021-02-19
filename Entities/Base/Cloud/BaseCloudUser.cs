@@ -12,6 +12,7 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
 		private string _contactNumber;
 		private string _preferredCurrencyIso;
 		private EnumCloudUserStatus _cloudUserStatus;
+		private EnumCloudUserRole _cloudUserRole;
 		private string _timezoneId;
 		private string _memorableWord;
 		private string _securityQuestion1;
@@ -100,7 +101,7 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
 				IsDirty = true;
 			}
 		}
-		
+
 		public EnumCloudUserStatus CloudUserStatus
 		{
 			get => _cloudUserStatus;
@@ -108,6 +109,18 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
 			{
 				if (_cloudUserStatus == value) return;
 				_cloudUserStatus = value;
+
+				IsDirty = true;
+			}
+		}
+
+		public EnumCloudUserRole CloudUserRole
+		{
+			get => _cloudUserRole;
+			set
+			{
+				if (_cloudUserRole == value) return;
+				_cloudUserRole = value;
 
 				IsDirty = true;
 			}
@@ -211,7 +224,7 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
 		}
 			
 		protected BaseCloudUser(Guid CreatedByUserId, EnumTitle Title, string FirstName, string LastName, string EmailAddress, 
-			EnumCloudUserStatus CloudUserStatus, string PreferredCurrencyIso, string TimezoneId, string MemorableWord,
+			EnumCloudUserStatus CloudUserStatus, EnumCloudUserRole CloudUserRole, string PreferredCurrencyIso, string TimezoneId, string MemorableWord,
 			string SecurityQuestion1, string SecurityAnswer1, string SecurityQuestion2, string SecurityAnswer2, string SecurityQuestion3,
 			string SecurityAnswer3)
 			: base(CreatedByUserId)
@@ -221,6 +234,7 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
 			_lastName = LastName;
 			_emailAddress = EmailAddress;
 			_cloudUserStatus = CloudUserStatus;
+			_cloudUserRole = CloudUserRole;
 			_preferredCurrencyIso = PreferredCurrencyIso;
 			_timezoneId = TimezoneId;
 			_memorableWord = MemorableWord;
@@ -262,6 +276,9 @@ namespace LittleLogBook.Data.Entities.Base.Cloud
 
 			fieldName = "CloudUserStatusId";
 			_cloudUserStatus = (EnumCloudUserStatus) Reader.GetInt32(Reader.GetOrdinal(fieldName));
+
+			fieldName = "CloudUserRoleId";
+			_cloudUserRole = (EnumCloudUserRole) Reader.GetInt32(Reader.GetOrdinal(fieldName));
 
 			fieldName = "PreferredCurrencyIso";
 			_preferredCurrencyIso = Reader.IsDBNull(Reader.GetOrdinal(fieldName)) ? "ZAR" : Reader.GetString(Reader.GetOrdinal(fieldName));

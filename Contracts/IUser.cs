@@ -20,6 +20,8 @@ namespace LittleLogBook.Data.Contracts
 
 		EnumCloudUserStatus CloudUserStatus { get; set; }
 
+		EnumCloudUserRole CloudUserRole { get; set; }
+
 		string TimezoneId { get; set; }
 		
 		string MemorableWord { get; set; }

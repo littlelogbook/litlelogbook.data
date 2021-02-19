@@ -19,6 +19,151 @@ namespace LittleLogBook.Data.Managers
             _dataHandler = dataHandler;
         }
 
+        public async Task<IEnumerable<INameValueValueStatistic>> GetCloudBackupRestoreDataTrafficPerCountry()
+        {
+            var returnValues = new List<INameValueValueStatistic>();
+
+            using (var command = _dataHandler.CreateCommand("GetCloudBackupRestoreDataTrafficPerCountry"))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        returnValues.Add(new NameValueValueStatistic(CurrentUser.CloudUserId, reader));
+                    }
+                }
+
+                return returnValues;
+            }
+        }
+
+        public async Task<IEnumerable<INameValueValueStatistic>> GetCloudBackupsRestoresPerCountry()
+        {
+            var returnValues = new List<INameValueValueStatistic>();
+
+            using (var command = _dataHandler.CreateCommand("GetCloudBackupsRestoresPerCountry"))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        returnValues.Add(new NameValueValueStatistic(CurrentUser.CloudUserId, reader));
+                    }
+                }
+
+                return returnValues;
+            }
+        }
+
+        public async Task<IEnumerable<INameValueValueStatistic>> GetCloudCreditsPerCountry()
+        {
+            var returnValues = new List<INameValueValueStatistic>();
+
+            using (var command = _dataHandler.CreateCommand("GetCloudCreditsPerCountry"))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        returnValues.Add(new NameValueValueStatistic(CurrentUser.CloudUserId, reader));
+                    }
+                }
+
+                return returnValues;
+            }
+        }
+
+        public async Task<IEnumerable<INameValueValueStatistic>> GetCloudSpendPerCountry()
+        {
+            var returnValues = new List<INameValueValueStatistic>();
+
+            using (var command = _dataHandler.CreateCommand("GetCloudSpendPerCountry"))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        returnValues.Add(new NameValueValueStatistic(CurrentUser.CloudUserId, reader));
+                    }
+                }
+
+                return returnValues;
+            }
+        }
+
+
+        public async Task<IEnumerable<INameValueStatistic>> GetInstallationsPerCountry()
+        {
+            var returnValues = new List<INameValueStatistic>();
+
+            using (var command = _dataHandler.CreateCommand("GetInstallationsPerCountry"))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        returnValues.Add(new NameValueStatistic(CurrentUser.CloudUserId, reader));
+                    }
+                }
+
+                return returnValues;
+            }
+        }
+
+        public async Task<IEnumerable<INameValueStatistic>> GetDevicesPerCountry()
+        {
+            var returnValues = new List<INameValueStatistic>();
+
+            using (var command = _dataHandler.CreateCommand("GetDevicesPerCountry"))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        returnValues.Add(new NameValueStatistic(CurrentUser.CloudUserId, reader));
+                    }
+                }
+
+                return returnValues;
+            }
+        }
+
+        public async Task<IEnumerable<INameValueValueStatistic>> GetCloudUsersPerCountry()
+        {
+            var returnValues = new List<INameValueValueStatistic>();
+
+            using (var command = _dataHandler.CreateCommand("GetCloudUsersPerCountry"))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        returnValues.Add(new NameValueValueStatistic(CurrentUser.CloudUserId, reader));
+                    }
+                }
+
+                return returnValues;
+            }
+        }
+
+        public async Task<IEnumerable<INameValueStatistic>> GetActiveDevicesPerCountry()
+        {
+            var returnValues = new List<INameValueStatistic>();
+
+            using (var command = _dataHandler.CreateCommand("GetActiveDevicesPerCountry"))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        returnValues.Add(new NameValueStatistic(CurrentUser.CloudUserId, reader));
+                    }
+                }
+
+                return returnValues;
+            }
+        }
+        
         public async Task<IEnumerable<IStatistic>> GetStatisticsForUserAsync(Guid cloudUserId)
         {
             if (Guid.Empty.Equals(cloudUserId))
@@ -124,5 +269,5 @@ namespace LittleLogBook.Data.Managers
 
             base.Dispose(disposing);
         }
-    }
+   }
 }

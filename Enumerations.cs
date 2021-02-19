@@ -9,6 +9,14 @@
 		Deactivated = 4
 	}
 
+	public enum EnumCloudUserRole
+    {
+		Unknown = 0,
+		Administrator = 1,
+		SuperUser = 2,
+		CloudUser = 3
+    }
+
 	public enum EnumTitle
 	{
 		Unknown = 0,
