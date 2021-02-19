@@ -25,6 +25,8 @@ namespace LittleLogBook.Data.Contracts
         Task<bool> CancelBackupEntryAsync(Guid backupEntryId, long backupSize);
         
         Task<bool> FinishBackupEntryAsync(Guid backupEntryId, long backupSize);
+
+        Task<IEnumerable<INameValueValueStatistic>> GetSqlConnections();
         
         Task<IEnumerable<IStatistic>> GetStatisticsForUserAsync(Guid cloudUserId);
         

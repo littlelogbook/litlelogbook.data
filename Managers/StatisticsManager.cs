@@ -164,6 +164,24 @@ namespace LittleLogBook.Data.Managers
             }
         }
         
+        public async Task<IEnumerable<INameValueValueStatistic>> GetSqlConnections()
+        {
+            var returnValues = new List<INameValueValueStatistic>();
+
+            using (var command = _dataHandler.CreateCommand("GetSqlConnections"))
+            {
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        returnValues.Add(new NameValueValueStatistic(CurrentUser.CloudUserId, reader));
+                    }
+                }
+
+                return returnValues;
+            }
+        }
+        
         public async Task<IEnumerable<IStatistic>> GetStatisticsForUserAsync(Guid cloudUserId)
         {
             if (Guid.Empty.Equals(cloudUserId))
